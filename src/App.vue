@@ -24,7 +24,8 @@ onMounted(async () => {
       <router-link to="/register">Register</router-link> |
       <router-link to="/forgot-password">Forgot Pass</router-link> |
       <router-link to="/reset-password/some-token">Reset Pass</router-link> |
-      <router-link to="/change-password">Change Pass</router-link>
+      <router-link to="/change-password">Change Pass</router-link> |
+      <router-link to="/me">My Profile</router-link>
     </nav>
   </div>
 
