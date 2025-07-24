@@ -15,3 +15,12 @@ export const register = async (form: FormData) => {
 
   return response.data;
 };
+
+export const fetchCurrentUser = async (token: string) => {
+  const response = await api.get("/auth/me", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data; // user object
+};

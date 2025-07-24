@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { useAuthStore } from "../../store/auth";
 import { useRouter } from "vue-router";
-import { register } from "../../services/auth";
+import { fetchCurrentUser, register } from "../../services/auth";
 
 const authStore = useAuthStore();
 const router = useRouter();
@@ -31,21 +31,23 @@ const handleRegister = async () => {
       form.append("image", image.value);
     }
 
-    for (let [key, val] of form.entries()) {
-      console.log(`${key}:`, val);
-    }
+    // for (let [key, val] of form.entries()) {
+    //   console.log(`${key}:`, val);
+    // }
 
-    const data = await register(form);
+    const { access_token } = await register(form);
+    authStore.setAuth(access_token, null);
 
-    authStore.setAuth(data.token, data.user);
+    const user = await fetchCurrentUser(access_token);
+    authStore.setAuth(access_token, user);
 
-    name.value = "";
-    email.value = "";
-    password.value = "";
-    image.value = null;
+    // name.value = "";
+    // email.value = "";
+    // password.value = "";
+    // image.value = null;
 
     // redirect to /me
-    router.push("/login");
+    router.push("/me");
   } catch (error: any) {
     error.value = error.response?.data?.message || "Registration failed";
   }

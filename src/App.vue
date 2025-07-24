@@ -1,4 +1,21 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { onMounted } from "vue";
+import { useAuthStore } from "./store/auth";
+import { fetchCurrentUser } from "./services/auth";
+
+const authStore = useAuthStore();
+
+onMounted(async () => {
+  if (authStore.token && !authStore.user) {
+    try {
+      const user = await fetchCurrentUser(authStore.token);
+      authStore.setAuth(authStore.token, user);
+    } catch (err) {
+      authStore.logout(); // token invalid or expired
+    }
+  }
+});
+</script>
 
 <template>
   <div>

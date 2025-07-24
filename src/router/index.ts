@@ -5,6 +5,7 @@ import RegisterPage from "../pages/auth/RegisterPage.vue";
 import ForgotPasswordPage from "../pages/auth/ForgotPasswordPage.vue";
 import ResetPasswordPage from "../pages/auth/ResetPasswordPage.vue";
 import ChangePasswordPage from "../pages/auth/ChangePasswordPage.vue";
+import MePage from "../pages/auth/MePage.vue";
 
 const routes = [
   // auth routes
@@ -13,6 +14,7 @@ const routes = [
   { path: "/forgot-password", component: ForgotPasswordPage },
   { path: "/reset-password/:token", component: ResetPasswordPage },
   { path: "/change-password", component: ChangePasswordPage },
+  { path: "/me", component: MePage },
 ];
 
 const router = createRouter({

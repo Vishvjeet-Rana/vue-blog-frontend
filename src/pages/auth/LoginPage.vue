@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { useAuthStore } from "../../store/auth";
 import { useRouter } from "vue-router";
-import { login } from "../../services/auth";
+import { fetchCurrentUser, login } from "../../services/auth";
 
 const authStore = useAuthStore();
 const router = useRouter();
@@ -13,16 +13,18 @@ const error = ref("");
 
 const handleLogin = async () => {
   try {
-    const data = await login({
+    const { access_token } = await login({
       email: email.value,
       password: password.value,
     });
+    authStore.setAuth(access_token, null);
 
-    authStore.setAuth(data.token, data.user);
+    const user = await fetchCurrentUser(access_token);
+    authStore.setAuth(access_token, user);
 
     router.push("/me");
-  } catch (error: any) {
-    error.value = error.response?.data?.message || "Login Failed";
+  } catch (err: any) {
+    error.value = err.response?.data?.message || "Login failed";
   }
 };
 </script>

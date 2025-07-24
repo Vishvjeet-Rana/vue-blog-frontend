@@ -5,7 +5,7 @@ interface User {
   name: string;
   email: string;
   role: "user" | "admin";
-  profileImage?: string;
+  image?: string;
 }
 
 export const useAuthStore = defineStore("auth", {
@@ -15,7 +15,7 @@ export const useAuthStore = defineStore("auth", {
   }),
 
   actions: {
-    setAuth(token: string, user: User) {
+    setAuth(token: string, user: User | null) {
       this.token = token;
       this.user = user;
       localStorage.setItem("token", token);
