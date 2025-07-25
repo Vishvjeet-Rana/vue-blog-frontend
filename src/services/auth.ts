@@ -47,3 +47,21 @@ export const changePassword = async (
   });
   return response.data;
 };
+
+export const updateProfile = async (payload: {
+  name?: string;
+  email?: string;
+}) => {
+  const res = await api.put("/profile", payload);
+  return res.data;
+};
+
+export const uploadImage = async (formData: FormData) => {
+  const res = await api.put("/profile/upload", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+  return res.data;
+};

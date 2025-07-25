@@ -6,8 +6,11 @@ const router = useRouter();
 const authStore = useAuthStore();
 
 const handleLogOut = async () => {
-  authStore.logout();
-  router.push("/");
+  const confirmed = window.confirm("Are you sure you want to log out?");
+  if (confirmed) {
+    authStore.logout();
+    router.push("/");
+  }
 };
 </script>
 
@@ -16,6 +19,7 @@ const handleLogOut = async () => {
     <h1>Welcome to BLOG API PROJECT WITH VUE.JS + NEST.JS 🎉</h1>
 
     <div v-if="!authStore.token">
+      <h3>Already have an account?</h3>
       <button @click="router.push('/login')" type="submit">Login</button>
       <br /><br /><br />
       <h3>Don't have any account ?</h3>

@@ -44,6 +44,9 @@ const handleLogin = async () => {
         required
       />
       <button type="submit">Log In</button>
+      <p>
+        <router-link to="/forgot-password">Forgot Password?</router-link>
+      </p>
     </form>
 
     <p v-if="error" style="color: red">{{ error }}</p>

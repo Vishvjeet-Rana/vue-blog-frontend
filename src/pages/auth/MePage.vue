@@ -35,15 +35,30 @@ const goBack = () => {
       />
 
       <hr />
-      <button @click="router.push('/profile/update')">Update Profile</button>
-      <button @click="router.push('/profile/upload')">Upload Image</button>
+      <div style="margin-bottom: 15px">
+        <h3>Profile Update Section</h3>
+        <button
+          style="margin-right: 10px"
+          @click="router.push('/profile/update')"
+        >
+          Update Profile
+        </button>
+        <button @click="router.push('/profile/upload')">Upload Image</button>
+      </div>
       <hr />
 
+      <hr />
       <div style="margin-top: 25px">
-        <button @click="activeSection = 'forgot'">Forgot Password</button>
-        <button @click="activeSection = 'reset'">Reset Password</button>
+        <h3>Password Settings</h3>
+        <button style="margin-right: 10px" @click="activeSection = 'forgot'">
+          Forgot Password
+        </button>
+        <button style="margin-right: 10px" @click="activeSection = 'reset'">
+          Reset Password
+        </button>
         <button @click="activeSection = 'change'">Change Password</button>
       </div>
+      <hr />
     </div>
 
     <div v-else-if="activeSection === 'forgot'">
