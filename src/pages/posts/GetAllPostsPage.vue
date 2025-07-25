@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { getAllPosts } from "../../services/post";
+import { useAuthStore } from "../../store/auth";
+import { useRouter } from "vue-router";
 
 interface Post {
   id: string;
   title: string;
   content: string;
   image?: string;
+  authorId: string;
   author?: {
     name: string;
     email: string;
@@ -15,6 +18,8 @@ interface Post {
 
 const posts = ref<Post[]>([]);
 const error = ref("");
+const authStore = useAuthStore();
+const router = useRouter();
 
 onMounted(async () => {
   try {
@@ -48,6 +53,14 @@ onMounted(async () => {
             height="300"
           />
         </div>
+
+        <!-- ✅ Edit button visible only to owner -->
+        <button
+          v-if="authStore.user?.id === post.authorId"
+          @click="router.push(`/post/${post.id}/update`)"
+        >
+          Edit
+        </button>
 
         <small
           >Author: {{ post.author?.name }} ({{ post.author?.email }})</small

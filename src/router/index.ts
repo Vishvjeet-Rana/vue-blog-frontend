@@ -12,6 +12,7 @@ import UploadImage from "../pages/profile/UploadImage.vue";
 import CreatePostPage from "../pages/posts/CreatePostPage.vue";
 import GetAllPostsPage from "../pages/posts/GetAllPostsPage.vue";
 import GetOnePostByIdPage from "../pages/posts/GetOnePostByIdPage.vue";
+import UpdatePostPage from "../pages/posts/UpdatePostPage.vue";
 
 const routes = [
   // welcome page route
@@ -30,6 +31,7 @@ const routes = [
   { path: "/create-post", component: CreatePostPage },
   { path: "/posts", component: GetAllPostsPage },
   { path: "/post/:id", component: GetOnePostByIdPage },
+  { path: "/post/:id/update", component: UpdatePostPage },
 ];
 
 const router = createRouter({
