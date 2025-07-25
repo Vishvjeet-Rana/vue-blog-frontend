@@ -24,6 +24,7 @@ const isLoggedIn = computed(() => !!authStore.token);
   <div>
     <nav>
       <router-link to="/">Home</router-link> |
+      <router-link to="/posts">All Posts</router-link> |
 
       <template v-if="!isLoggedIn">
         <router-link to="/login">Login</router-link> |

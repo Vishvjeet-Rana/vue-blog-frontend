@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
 import { getAllPosts } from "../../services/post";
 
 interface Post {
@@ -46,12 +45,14 @@ onMounted(async () => {
           <img
             :src="`http://localhost:3000/uploads/${post.image}`"
             width="200"
+            height="300"
           />
         </div>
 
         <small
           >Author: {{ post.author?.name }} ({{ post.author?.email }})</small
         >
+        <router-link :to="`/post/${post.id}`">Read More</router-link>
       </div>
     </div>
 

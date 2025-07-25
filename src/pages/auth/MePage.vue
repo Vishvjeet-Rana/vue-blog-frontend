@@ -47,7 +47,6 @@ const goBack = () => {
         </button>
         <button @click="router.push('/profile/upload')">Upload Image</button>
       </div>
-      <hr />
 
       <hr />
       <div style="margin-top: 25px">
@@ -65,6 +64,8 @@ const goBack = () => {
       <div v-if="authStore.token">
         <h3>Post(s) Section</h3>
         <button @click="router.push('/create-post')">Create A Post</button>
+        <br /><br />
+        <button @click="router.push('/posts')">Feed</button>
       </div>
     </div>
 

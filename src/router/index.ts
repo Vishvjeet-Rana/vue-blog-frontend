@@ -11,6 +11,7 @@ import UpdateProfle from "../pages/profile/UpdateProfle.vue";
 import UploadImage from "../pages/profile/UploadImage.vue";
 import CreatePostPage from "../pages/posts/CreatePostPage.vue";
 import GetAllPostsPage from "../pages/posts/GetAllPostsPage.vue";
+import GetOnePostByIdPage from "../pages/posts/GetOnePostByIdPage.vue";
 
 const routes = [
   // welcome page route
@@ -28,6 +29,7 @@ const routes = [
   // post rotes
   { path: "/create-post", component: CreatePostPage },
   { path: "/posts", component: GetAllPostsPage },
+  { path: "/post/:id", component: GetOnePostByIdPage },
 ];
 
 const router = createRouter({
