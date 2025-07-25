@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { getAllPosts } from "../../services/post";
+import { deletePost, getAllPosts } from "../../services/post";
 import { useAuthStore } from "../../store/auth";
 import { useRouter } from "vue-router";
 
@@ -30,6 +30,21 @@ onMounted(async () => {
       error.response?.data?.message || "Something went wrong in get all posts";
   }
 });
+
+const handleDeletePost = async (id: string) => {
+  try {
+    const confirmed = window.confirm(
+      "Do you want to delete this post? This can't be undone."
+    );
+    if (confirmed) {
+      await deletePost(id);
+      posts.value = posts.value.filter((post) => post.id !== id);
+    }
+  } catch (err: any) {
+    error.value =
+      err.response?.data?.message || "Something went wrong in deleting post";
+  }
+};
 </script>
 
 <template>
@@ -60,6 +75,16 @@ onMounted(async () => {
           @click="router.push(`/post/${post.id}/update`)"
         >
           Edit
+        </button>
+
+        <br />
+        <!-- ✅ Only show if user is logged in and owns the post -->
+        <button
+          v-if="authStore.user?.id === post.authorId"
+          @click="handleDeletePost(post.id)"
+          style="background-color: red; color: white; margin-left: 10px"
+        >
+          Delete
         </button>
 
         <small

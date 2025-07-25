@@ -2,11 +2,9 @@
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { getPostById, updatePost } from "../../services/post";
-import { useAuthStore } from "../../store/auth";
 
 const route = useRoute();
 const router = useRouter();
-const authStore = useAuthStore();
 
 const postId = route.params.id as string;
 const title = ref("");
@@ -35,7 +33,7 @@ const handleUpdatePost = async () => {
       formData.append("image", file.value);
     }
 
-    const res = await updatePost(postId, formData);
+    await updatePost(postId, formData);
     message.value = "Post Updated successfully!";
     error.value = "";
 
