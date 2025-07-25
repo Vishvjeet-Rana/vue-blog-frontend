@@ -7,6 +7,7 @@ const route = useRoute();
 const router = useRouter();
 const token = route.params.token as string;
 
+const emit = defineEmits(["back"]);
 const newPassword = ref("");
 const message = ref("");
 const error = ref("");
@@ -39,6 +40,9 @@ const handleReset = async () => {
       <button type="submit">Reset Password</button>
     </form>
 
+    <button style="margin-top: 20px" @click="emit('back')">
+      &larr; Go Back
+    </button>
     <p style="color: green">{{ message }}</p>
     <p style="color: red">{{ error }}</p>
   </div>

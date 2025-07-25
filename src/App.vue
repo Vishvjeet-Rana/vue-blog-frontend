@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { computed, onMounted } from "vue";
 import { useAuthStore } from "./store/auth";
 import { fetchCurrentUser } from "./services/auth";
 
@@ -15,17 +15,24 @@ onMounted(async () => {
     }
   }
 });
+
+// checking if user logged in or not
+const isLoggedIn = computed(() => !!authStore.token);
 </script>
 
 <template>
   <div>
     <nav>
-      <router-link to="/login">Login</router-link> |
-      <router-link to="/register">Register</router-link> |
-      <router-link to="/forgot-password">Forgot Pass</router-link> |
-      <router-link to="/reset-password/some-token">Reset Pass</router-link> |
-      <router-link to="/change-password">Change Pass</router-link> |
-      <router-link to="/me">My Profile</router-link>
+      <router-link to="/">Home</router-link> |
+
+      <template v-if="!isLoggedIn">
+        <router-link to="/login">Login</router-link> |
+        <router-link to="/register">Register</router-link>
+      </template>
+
+      <template v-else>
+        <router-link to="/me">My Profile</router-link> |
+      </template>
     </nav>
   </div>
 

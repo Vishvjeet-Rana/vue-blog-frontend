@@ -5,6 +5,7 @@ import { changePassword } from "../../services/auth";
 
 const router = useRouter();
 
+const emit = defineEmits(["back"]);
 const oldPassword = ref("");
 const newPassword = ref("");
 const error = ref("");
@@ -45,6 +46,9 @@ const handleChangePass = async () => {
       <button type="submit">Change Password</button>
     </form>
 
+    <button style="margin-top: 20px" @click="emit('back')">
+      &larr; Go Back
+    </button>
     <p style="color: green">{{ message }}</p>
     <p style="color: red">{{ error }}</p>
   </div>

@@ -6,8 +6,13 @@ import ForgotPasswordPage from "../pages/auth/ForgotPasswordPage.vue";
 import ResetPasswordPage from "../pages/auth/ResetPasswordPage.vue";
 import ChangePasswordPage from "../pages/auth/ChangePasswordPage.vue";
 import MePage from "../pages/auth/MePage.vue";
+import WelcomePage from "../pages/WelcomePage.vue";
+import UpdateProfle from "../pages/profile/UpdateProfle.vue";
+import UploadImage from "../pages/profile/UploadImage.vue";
 
 const routes = [
+  // welcome page route
+  { path: "/", component: WelcomePage },
   // auth routes
   { path: "/login", component: LoginPage },
   { path: "/register", component: RegisterPage },
@@ -15,6 +20,9 @@ const routes = [
   { path: "/reset-password/:token", component: ResetPasswordPage },
   { path: "/change-password", component: ChangePasswordPage },
   { path: "/me", component: MePage },
+  // profile routes
+  { path: "/profile/update", component: UpdateProfle },
+  { path: "/profile/upload", component: UploadImage },
 ];
 
 const router = createRouter({
