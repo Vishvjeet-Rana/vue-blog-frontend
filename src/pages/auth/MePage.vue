@@ -32,6 +32,8 @@ const goBack = () => {
         :src="`http://localhost:3000/uploads/${user.image}`"
         v-if="user.image"
         width="350"
+        alt="user entered image"
+        style="border: 1px solid gray; border-radius: 10px"
       />
 
       <hr />
@@ -59,6 +61,11 @@ const goBack = () => {
         <button @click="activeSection = 'change'">Change Password</button>
       </div>
       <hr />
+
+      <div v-if="authStore.token">
+        <h3>Post(s) Section</h3>
+        <button @click="router.push('/create-post')">Create A Post</button>
+      </div>
     </div>
 
     <div v-else-if="activeSection === 'forgot'">
