@@ -13,6 +13,13 @@ import CreatePostPage from "../pages/posts/CreatePostPage.vue";
 import GetAllPostsPage from "../pages/posts/GetAllPostsPage.vue";
 import GetOnePostByIdPage from "../pages/posts/GetOnePostByIdPage.vue";
 import UpdatePostPage from "../pages/posts/UpdatePostPage.vue";
+import AdminDashBoardPage from "../pages/admin/AdminDashBoardPage.vue";
+import AdminUserListPage from "../pages/admin/AdminUserListPage.vue";
+import AdminUserDetailPage from "../pages/admin/AdminUserDetailPage.vue";
+import AdminCreateUserPage from "../pages/admin/AdminCreateUserPage.vue";
+import { useAuthStore } from "../store/auth";
+import { pinia } from "../main";
+import AdminEditUserPage from "../pages/admin/AdminEditUserPage.vue";
 
 const routes = [
   // welcome page route
@@ -32,11 +39,61 @@ const routes = [
   { path: "/posts", component: GetAllPostsPage },
   { path: "/post/:id", component: GetOnePostByIdPage },
   { path: "/post/:id/update", component: UpdatePostPage },
+  // admin routes
+  {
+    path: "/admin",
+    component: AdminDashBoardPage,
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
+  {
+    path: "/admin/users",
+    component: AdminUserListPage,
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
+  {
+    path: "/admin/users/:id",
+    component: AdminUserDetailPage,
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
+  {
+    path: "/admin/create-user",
+    component: AdminCreateUserPage,
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
+  {
+    path: "/admin/users/:id/edit",
+    component: AdminEditUserPage,
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
 ];
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
+});
+
+router.beforeEach(async (to, from, next) => {
+  const authStore = useAuthStore(pinia);
+
+  // hydrate if user is not loaded yet
+  if (authStore.loadingUser) {
+    await authStore.hydrateUser();
+  }
+
+  // if route rquires login
+  if (to.meta.requiresAuth && !authStore.token) {
+    return next("/login");
+  }
+
+  // if route requires admin
+  if (
+    to.meta.requiresAdmin &&
+    authStore.user?.role.toLocaleLowerCase() !== "admin"
+  ) {
+    return next("/me");
+  }
+
+  next();
 });
 
 export default router;

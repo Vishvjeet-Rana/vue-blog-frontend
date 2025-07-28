@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import { useAuthStore } from "../../store/auth";
 import { useRouter } from "vue-router";
 const authStore = useAuthStore();
-const user = computed(() => authStore.user);
-
-console.log("👤 Loaded user:", user);
+const user = authStore.user;
 
 import ForgotPasswordPage from "./ForgotPasswordPage.vue";
 import ResetPasswordPage from "./ResetPasswordPage.vue";
@@ -20,6 +18,9 @@ const router = useRouter();
 const goBack = () => {
   activeSection.value = "main";
 };
+
+console.log("🧪 Token:", authStore.token);
+console.log("🧪 User object:", user);
 </script>
 
 <template>
@@ -67,6 +68,14 @@ const goBack = () => {
         <br /><br />
         <button @click="router.push('/posts')">Feed</button>
       </div>
+
+      <button
+        class="admin-btn"
+        v-if="user?.role.toLocaleLowerCase() === 'admin'"
+        @click="router.push('/admin')"
+      >
+        Admin Space
+      </button>
     </div>
 
     <div v-else-if="activeSection === 'forgot'">
@@ -82,3 +91,24 @@ const goBack = () => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.admin-btn {
+  display: inline-block;
+  background-color: orchid;
+  color: #fff;
+  font-weight: bolder;
+  font-size: 15px;
+  padding: 10px 18px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+  text-decoration: none;
+  font-weight: 500;
+  margin-top: 20px;
+}
+.admin-btn:hover {
+  background-color: rgb(224, 24, 218);
+}
+</style>

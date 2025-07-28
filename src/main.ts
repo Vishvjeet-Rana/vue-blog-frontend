@@ -4,5 +4,16 @@ import App from "./App.vue";
 
 import { createPinia } from "pinia";
 import router from "./router";
+import { useAuthStore } from "./store/auth";
 
-createApp(App).use(createPinia()).use(router).mount("#app");
+const app = createApp(App);
+export const pinia = createPinia();
+
+app.use(pinia);
+app.use(router);
+
+// Wait until the user is hydrated BEFORE mounting the app
+const authStore = useAuthStore();
+authStore.hydrateUser().finally(() => {
+  app.mount("#app");
+});

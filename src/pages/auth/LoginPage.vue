@@ -17,7 +17,6 @@ const handleLogin = async () => {
       email: email.value,
       password: password.value,
     });
-    authStore.setAuth(access_token, null);
 
     const user = await fetchCurrentUser(access_token);
     authStore.setAuth(access_token, user);

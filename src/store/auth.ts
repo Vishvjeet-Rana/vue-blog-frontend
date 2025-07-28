@@ -1,10 +1,11 @@
 import { defineStore } from "pinia";
+import { fetchCurrentUser } from "../services/auth";
 
 interface User {
   id: string;
   name: string;
   email: string;
-  role: "user" | "admin";
+  role: "user" | "admin" | "USER" | "ADMIN";
   image?: string;
 }
 
@@ -12,6 +13,7 @@ export const useAuthStore = defineStore("auth", {
   state: () => ({
     token: localStorage.getItem("token") || "",
     user: null as User | null,
+    loadingUser: true,
   }),
 
   actions: {
@@ -25,6 +27,22 @@ export const useAuthStore = defineStore("auth", {
       this.token = "";
       this.user = null;
       localStorage.removeItem("token");
+    },
+
+    async hydrateUser(): Promise<void> {
+      if (!this.token) {
+        this.loadingUser = false;
+        return;
+      }
+
+      try {
+        const res = await fetchCurrentUser(this.token);
+        this.user = res;
+      } catch (error) {
+        this.logout();
+      } finally {
+        this.loadingUser = false;
+      }
     },
   },
 });
