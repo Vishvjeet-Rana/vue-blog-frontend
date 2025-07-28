@@ -6,6 +6,7 @@ import api from "../../services/api";
 const name = ref("");
 const email = ref("");
 const role = ref<"user" | "admin">("user");
+const router = useRouter();
 
 const success = ref("");
 const error = ref("");
@@ -19,6 +20,7 @@ const handleSubmit = async () => {
     };
     const res = await api.post("/users", payload);
     success.value = res.data.message;
+    router.push(`/admin/users`);
     error.value = "";
   } catch (error: any) {
     success.value = "";
