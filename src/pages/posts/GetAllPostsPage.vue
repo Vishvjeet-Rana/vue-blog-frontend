@@ -81,7 +81,10 @@ const handleDeletePost = async (id: string) => {
         <br />
         <!-- ✅ Only show if user is logged in and owns the post -->
         <button
-          v-if="authStore.user?.id === post.authorId"
+          v-if="
+            authStore.user?.id === post.authorId ||
+            authStore.user?.role === 'ADMIN'
+          "
           @click="handleDeletePost(post.id)"
           style="
             background-color: red;
