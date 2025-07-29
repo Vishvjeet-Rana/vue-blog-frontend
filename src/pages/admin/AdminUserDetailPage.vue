@@ -46,43 +46,92 @@ const handleVerify = async () => {
 </script>
 
 <template>
-  <div>
-    <h2>👤 User Details</h2>
-    <p v-if="error" style="color: red">{{ error }}</p>
-    <p v-if="success" style="color: green">{{ success }}</p>
+  <div class="h-screen w-full bg-gray-200 flex justify-center">
+    <div class="bg-white rounded-2xl w-[60%] h-[55%] mt-15 p-5 gap-5">
+      <div class="py-5">
+        <h2 class="text-3xl font-bold text-blue-500">👤 User Details</h2>
+      </div>
+      <p v-if="error" style="color: red">{{ error }}</p>
+      <p v-if="success" style="color: green">{{ success }}</p>
 
-    <div v-if="user">
-      <p><strong>ID:</strong> {{ user.id }}</p>
-      <p><strong>Name:</strong> {{ user.name }}</p>
-      <p><strong>Email:</strong> {{ user.email }}</p>
-      <p><strong>Role:</strong> {{ user.role }}</p>
-      <p><strong>Verified:</strong> {{ user.verified ? "Yes" : "No" }}</p>
-      <p>
-        <strong>Created At:</strong>
-        {{ new Date(user.createdAt).toLocaleString() }}
-      </p>
-      <p>
-        <strong>Updated At:</strong>
-        {{ new Date(user.updatedAt).toLocaleString() }}
-      </p>
-
-      <!-- Buttons -->
-      <div style="margin-top: 20px">
-        <button @click="router.push(`/admin/users/${user.id}/edit`)">
-          ✏️ Edit User
-        </button>
-
-        <button style="margin-left: 10px" @click="handleDelete">
-          🗑 Delete User
-        </button>
-
-        <button
-          v-if="!user.verified"
-          style="margin-left: 10px"
-          @click="handleVerify"
+      <div v-if="user">
+        <table
+          class="w-full text-sm text-left border border-gray-200 mt-4 rounded overflow-hidden"
         >
-          ✅ Verify User
-        </button>
+          <tbody>
+            <tr class="border-b">
+              <th class="bg-gray-100 px-4 py-2 font-semibold text-gray-700">
+                ID
+              </th>
+              <td class="px-4 py-2">{{ user.id }}</td>
+            </tr>
+            <tr class="border-b">
+              <th class="bg-gray-100 px-4 py-2 font-semibold text-gray-700">
+                Name
+              </th>
+              <td class="px-4 py-2">{{ user.name }}</td>
+            </tr>
+            <tr class="border-b">
+              <th class="bg-gray-100 px-4 py-2 font-semibold text-gray-700">
+                Email
+              </th>
+              <td class="px-4 py-2">{{ user.email }}</td>
+            </tr>
+            <tr class="border-b">
+              <th class="bg-gray-100 px-4 py-2 font-semibold text-gray-700">
+                Role
+              </th>
+              <td class="px-4 py-2">{{ user.role }}</td>
+            </tr>
+            <tr class="border-b">
+              <th class="bg-gray-100 px-4 py-2 font-semibold text-gray-700">
+                Verified
+              </th>
+              <td class="px-4 py-2">{{ user.verified ? "Yes" : "No" }}</td>
+            </tr>
+            <tr class="border-b">
+              <th class="bg-gray-100 px-4 py-2 font-semibold text-gray-700">
+                Created At
+              </th>
+              <td class="px-4 py-2">
+                {{ new Date(user.createdAt).toLocaleString() }}
+              </td>
+            </tr>
+            <tr>
+              <th class="bg-gray-100 px-4 py-2 font-semibold text-gray-700">
+                Updated At
+              </th>
+              <td class="px-4 py-2">
+                {{ new Date(user.updatedAt).toLocaleString() }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Buttons -->
+        <div class="mt-6 flex gap-4">
+          <button
+            class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+            @click="router.push(`/admin/users/${user.id}/edit`)"
+          >
+            ✏️ Edit User
+          </button>
+
+          <button
+            class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
+            @click="handleDelete"
+          >
+            🗑 Delete User
+          </button>
+
+          <button
+            v-if="!user.verified"
+            class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition"
+            @click="handleVerify"
+          >
+            ✅ Verify User
+          </button>
+        </div>
       </div>
     </div>
   </div>

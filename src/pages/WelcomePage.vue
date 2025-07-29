@@ -16,141 +16,61 @@ const handleLogOut = async () => {
 
 <template>
   <div
-    class="h-screen w-screen flex flex-col justify-center items-center gap-7 bg-gray-200"
+    class="h-screen w-screen flex flex-col justify-center items-center gap-7 bg-gray-100"
   >
-    <div>
-      <h1 class="text-blue-600 font-bold text-4xl">Welcome to BLOG API</h1>
-    </div>
+    <h1 class="text-4xl font-extrabold text-gray-800">Welcome to BLOG API</h1>
+
     <div
-      class="flex flex-col gap-5 justify-center rounded-3xl bg-white drop-shadow-gray-600 shadow-2xl w-[40%] h-[50%] p-8 items-center"
+      class="flex flex-col gap-6 justify-center items-center rounded-2xl bg-white shadow-lg w-[90%] max-w-xl p-10"
     >
-      <div
-        v-if="!authStore.token"
-        class="h-[90%] w-[90%] flex flex-col justify-around"
-      >
-        <div class="h-[45%] p-5">
-          <h3 class="font-semibold mb-4 text-xl text-gray-700">
+      <!-- Not Logged In -->
+      <div v-if="!authStore.token" class="w-full space-y-6">
+        <div class="space-y-3">
+          <h3 class="text-xl font-semibold text-gray-700">
             Already have an account?
           </h3>
           <button
-            class="border-2 border-none py-2 px-4 rounded-xl font-black bg-amber-400"
             @click="router.push('/login')"
-            type="submit"
+            class="w-full py-2 px-4 rounded-lg bg-yellow-400 hover:bg-yellow-500 transition font-bold text-gray-800"
           >
             Login &rarr;
           </button>
         </div>
 
-        <div class="h-[45%] p-5">
-          <h3 class="font-semibold mb-4 text-xl text-gray-700">
-            Don't have any account ?
+        <div class="space-y-3">
+          <h3 class="text-xl font-semibold text-gray-700">
+            Don’t have an account?
           </h3>
           <button
-            class="border-2 border-none py-2 px-4 rounded-xl font-black bg-amber-400"
-            @click="router.push('register')"
-            type="submit"
+            @click="router.push('/register')"
+            class="w-full py-2 px-4 rounded-lg bg-yellow-400 hover:bg-yellow-500 transition font-bold text-gray-800"
           >
             Register &rarr;
           </button>
         </div>
       </div>
 
-      <div v-else class="p-3 h-[80%] w-[85%] flex flex-col justify-between">
-        <div class="flex items-center justify-center">
-          <p class="font-bold text-3xl text-amber-500">Welcome Back!</p>
-        </div>
-        <div>
-          <p class="font-bold text-xl">You are already logged in</p>
-        </div>
-        <div>
-          <button
-            class="border-none bg-gray-600 text-white py-2 px-3 rounded-xl font-semibold"
-            @click="router.push('/me')"
-          >
-            Go to Profile &rarr;
-          </button>
-        </div>
+      <!-- Logged In -->
+      <div v-else class="w-full space-y-6 text-center">
+        <p class="text-3xl font-bold text-yellow-500">Welcome Back!</p>
+        <p class="text-lg font-semibold text-gray-700">
+          You are already logged in
+        </p>
 
-        <div>
-          <button
-            @click="handleLogOut"
-            style="
-              background-color: red;
-              padding: 10px;
-              color: white;
-              border: none;
-              font-size: 15px;
-              font-weight: bold;
-              border-radius: 15px;
-            "
-          >
-            Log Out
-          </button>
-        </div>
+        <button
+          @click="router.push('/me')"
+          class="w-full py-2 px-4 rounded-lg bg-gray-700 hover:bg-gray-800 transition text-white font-semibold"
+        >
+          Go to Profile &rarr;
+        </button>
+
+        <button
+          @click="handleLogOut"
+          class="w-full py-2 px-4 rounded-lg bg-red-500 hover:bg-red-600 transition text-white font-semibold"
+        >
+          Log Out
+        </button>
       </div>
     </div>
   </div>
 </template>
-
-<!-- <style scoped>
-.animated-btn {
-  position: relative;
-  padding: 12px 24px;
-  font-size: 16px;
-  color: white;
-  background: #222;
-  border: none;
-  border-radius: 8px;
-  overflow: hidden;
-  cursor: pointer;
-  z-index: 1;
-  transition: transform 0.2s ease, box-shadow 0.3s ease;
-}
-
-.animated-btn::before {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(
-    circle,
-    rgba(255, 255, 255, 0.2) 10%,
-    transparent 70%
-  );
-  transform: rotate(45deg);
-  transition: all 0.6s ease;
-  z-index: 0;
-}
-
-.animated-btn:hover::before {
-  transform: rotate(90deg);
-  opacity: 1;
-}
-
-.animated-btn:hover {
-  transform: scale(1.04);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35);
-}
-
-.animated-border-btn {
-  position: relative;
-  padding: 12px 24px;
-  font-size: 16px;
-  font-weight: bold;
-  color: #222;
-  background-color: #fff;
-  border: 2px solid #4f46e5;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.4s ease;
-  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
-}
-
-.animated-border-btn:hover {
-  border-width: 4px;
-  box-shadow: 0 0 10px rgba(79, 70, 229, 0.4);
-  transform: scale(1.05);
-}
-</style> -->
