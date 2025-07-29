@@ -24,75 +24,122 @@ console.log("🧪 User object:", user);
 </script>
 
 <template>
-  <div v-if="user">
-    <div v-if="activeSection === 'main'">
-      <h3 class="profile-name">👤 Name: {{ user.name }}</h3>
-      <p class="profile-info">📧 Email: {{ user.email }}</p>
-      <p class="profile-info">🛡️ Role: {{ user.role }}</p>
-      <img
-        v-if="user.image"
-        :src="`http://localhost:3000/uploads/${user.image}`"
-        alt="user profile image"
-        class="profile-image"
-      />
-
-      <hr />
-      <div style="margin-bottom: 15px">
-        <h3 class="styled-text">Profile Update Section</h3>
-        <button
-          class="basic-button-styling"
-          style="margin-right: 10px"
-          @click="router.push('/profile/update')"
-        >
-          Update Profile
-        </button>
-        <button
-          class="basic-button-styling"
-          @click="router.push('/profile/upload')"
-        >
-          Upload Image
-        </button>
+  <div
+    v-if="user"
+    class="h-screen w-screen flex flex-col justify-center items-center gap-7 bg-gray-200 p-4"
+  >
+    <div
+      v-if="activeSection === 'main'"
+      class="h-full w-[90%] p-6 rounded-3xl flex flex-col gap-5"
+    >
+      <!-- the user info section -->
+      <div class="flex items-center gap-5 p-3 rounded-3xl bg-gray-300">
+        <!-- image of user -->
+        <div class="rounded-full w-26 h-26 overflow-hidden">
+          <img
+            v-if="user.image"
+            :src="`http://localhost:3000/uploads/${user.image}`"
+            alt="user profile image"
+            class="w-full h-full object-cover"
+          />
+        </div>
+        <!-- user's info -->
+        <div>
+          <h3 class="text-2xl font-semibold">{{ user.name }}</h3>
+          <p class="text-sm">{{ user.email }}</p>
+          <p class="text-sm">{{ user.role }}</p>
+        </div>
       </div>
 
-      <hr />
-      <div style="margin-top: 25px">
-        <h3 class="styled-text">Password Settings</h3>
-        <button
-          class="basic-button-styling"
-          style="margin-right: 10px"
-          @click="activeSection = 'forgot'"
-        >
-          Forgot Password
-        </button>
-        <button
-          class="basic-button-styling"
-          style="margin-right: 10px"
-          @click="activeSection = 'reset'"
-        >
-          Reset Password
-        </button>
-        <button class="basic-button-styling" @click="activeSection = 'change'">
-          Change Password
-        </button>
+      <!-- profile update section -->
+      <div
+        class="bg-blue-200 flex justify-center-center gap-5 p-3 rounded-3xl flex-col"
+      >
+        <div>
+          <h3 class="font-semibold text-2xl">Profile Update Section</h3>
+        </div>
+        <div>
+          <button
+            class="border-2 border-none py-1 px-3 rounded-xl bg-amber-400"
+            @click="router.push('/profile/update')"
+          >
+            Update Profile
+          </button>
+        </div>
+        <div>
+          <button
+            class="border-2 border-none py-1 px-3 rounded-xl bg-amber-400"
+            @click="router.push('/profile/upload')"
+          >
+            Upload Image
+          </button>
+        </div>
       </div>
-      <hr />
 
-      <div v-if="authStore.token">
-        <h3 class="styled-text">Post(s) Section</h3>
-        <button
-          class="basic-button-styling"
-          @click="router.push('/create-post')"
-        >
-          Create A Post
-        </button>
-        <br /><br />
-        <button class="basic-button-styling" @click="router.push('/posts')">
-          Feed
-        </button>
+      <!-- Password Settings -->
+      <div
+        class="bg-gray-300 flex justify-center-center gap-5 p-3 rounded-3xl flex-col"
+      >
+        <div>
+          <h3 class="font-semibold text-2xl">Password Settings</h3>
+        </div>
+        <div>
+          <button
+            class="border-2 border-none py-1 px-3 rounded-xl bg-amber-400"
+            style="margin-right: 10px"
+            @click="activeSection = 'forgot'"
+          >
+            Forgot Password
+          </button>
+        </div>
+        <div>
+          <button
+            class="border-2 border-none py-1 px-3 rounded-xl bg-amber-400"
+            style="margin-right: 10px"
+            @click="activeSection = 'reset'"
+          >
+            Reset Password
+          </button>
+        </div>
+        <div>
+          <button
+            class="border-2 border-none py-1 px-3 rounded-xl bg-amber-400"
+            @click="activeSection = 'change'"
+          >
+            Change Password
+          </button>
+        </div>
+      </div>
+
+      <!-- Post Section -->
+      <div
+        v-if="authStore.token"
+        class="bg-blue-200 flex justify-center-center gap-5 p-3 rounded-3xl flex-col"
+      >
+        <div>
+          <h3 class="font-semibold text-2xl">Post(s) Section</h3>
+        </div>
+        <div>
+          <button
+            class="border-2 border-none py-1 px-3 rounded-xl bg-amber-400"
+            @click="router.push('/create-post')"
+          >
+            Create A Post
+          </button>
+        </div>
+
+        <div>
+          <button
+            class="border-2 border-none py-1 px-3 rounded-xl bg-amber-400"
+            @click="router.push('/posts')"
+          >
+            Feed
+          </button>
+        </div>
       </div>
 
       <button
-        class="admin-btn"
+        class="relative px-6 py-2 rounded-xl text-white font-semibold bg-gradient-to-r from-pink-400 via-[orchid] to-pink-400 shadow-lg border border-pink-300 animate-pulse hover:animate-none hover:shadow-pink-500 hover:ring-2 hover:ring-white transition-all duration-300"
         v-if="user?.role.toLocaleLowerCase() === 'admin'"
         @click="router.push('/admin')"
       >
@@ -114,7 +161,7 @@ console.log("🧪 User object:", user);
   </div>
 </template>
 
-<style scoped>
+<!-- <style scoped>
 .admin-btn {
   display: inline-block;
   background-color: orchid;
@@ -212,4 +259,4 @@ console.log("🧪 User object:", user);
   border: 2px solid #ccc;
   object-fit: cover;
 }
-</style>
+</style> -->

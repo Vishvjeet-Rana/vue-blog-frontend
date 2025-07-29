@@ -44,17 +44,50 @@ const handleFileChange = (e: Event) => {
 </script>
 
 <template>
-  <h1>Upload Your Image</h1>
+  <div
+    class="h-screen w-screen flex flex-col justify-center items-center gap-7 bg-gray-200"
+  >
+    <div>
+      <h1 class="text-blue-600 font-bold text-4xl">Upload Your Image</h1>
+    </div>
 
-  <form @submit.prevent="handleUploadImage">
-    <input type="file" @change="handleFileChange" />
-    <br /><br />
-    <button type="submit">Upload</button>
-  </form>
+    <div
+      class="flex flex-col bg-white drop-shadow-gray-600 shadow-2xl rounded-2xl h-[50%] w-[40%]"
+    >
+      <form @submit.prevent="handleUploadImage" class="p-3">
+        <div class="p-4">
+          <label class="font-semibold text-lg" for="image">Select Image:</label>
+          <br /><br />
+          <input
+            class="border-b rounded-sm"
+            id="image"
+            type="file"
+            @change="handleFileChange"
+          />
+        </div>
 
-  <button style="margin-top: 20px" @click="router.push('/me')">
-    &larr; Go Back
-  </button>
+        <div class="p-4">
+          <button
+            class="border-2 border-none py-2 px-4 rounded-xl font-black bg-amber-400"
+            type="submit"
+          >
+            Upload
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div>
+      <button
+        class="text-blue-500 underline font-semibold"
+        style="margin-top: 20px"
+        @click="router.push('/me')"
+      >
+        &larr; Go Back
+      </button>
+    </div>
+  </div>
+
   <p style="color: greenyellow">{{ message }}</p>
   <p style="color: red">{{ error }}</p>
 </template>

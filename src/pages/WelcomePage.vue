@@ -15,53 +15,84 @@ const handleLogOut = async () => {
 </script>
 
 <template>
-  <div>
-    <h1>Welcome to BLOG API PROJECT WITH VUE.JS + NEST.JS 🎉</h1>
-
-    <div v-if="!authStore.token">
-      <h3>Already have an account?</h3>
-      <button class="animated-btn" @click="router.push('/login')" type="submit">
-        Login
-      </button>
-      <br /><br /><br />
-      <h3>Don't have any account ?</h3>
-      <button
-        class="animated-btn"
-        @click="router.push('register')"
-        type="submit"
-      >
-        Register
-      </button>
+  <div
+    class="h-screen w-screen flex flex-col justify-center items-center gap-7 bg-gray-200"
+  >
+    <div>
+      <h1 class="text-blue-600 font-bold text-4xl">Welcome to BLOG API</h1>
     </div>
+    <div
+      class="flex flex-col gap-5 justify-center rounded-3xl bg-white drop-shadow-gray-600 shadow-2xl w-[40%] h-[50%] p-8 items-center"
+    >
+      <div
+        v-if="!authStore.token"
+        class="h-[90%] w-[90%] flex flex-col justify-around"
+      >
+        <div class="h-[45%] p-5">
+          <h3 class="font-semibold mb-4 text-xl text-gray-700">
+            Already have an account?
+          </h3>
+          <button
+            class="border-2 border-none py-2 px-4 rounded-xl font-black bg-amber-400"
+            @click="router.push('/login')"
+            type="submit"
+          >
+            Login &rarr;
+          </button>
+        </div>
 
-    <div v-else>
-      <p>You are already logged in 🎉</p>
-      <button class="animated-border-btn" @click="router.push('/me')">
-        Go to Profile
-      </button>
+        <div class="h-[45%] p-5">
+          <h3 class="font-semibold mb-4 text-xl text-gray-700">
+            Don't have any account ?
+          </h3>
+          <button
+            class="border-2 border-none py-2 px-4 rounded-xl font-black bg-amber-400"
+            @click="router.push('register')"
+            type="submit"
+          >
+            Register &rarr;
+          </button>
+        </div>
+      </div>
 
-      <div>
-        <button
-          class="animated-btn"
-          @click="handleLogOut"
-          style="
-            background-color: red;
-            padding: 10px;
-            margin-top: 30px;
-            color: white;
-            border: none;
-            font-size: 15px;
-            font-weight: bold;
-          "
-        >
-          Log Out
-        </button>
+      <div v-else class="p-3 h-[80%] w-[85%] flex flex-col justify-between">
+        <div class="flex items-center justify-center">
+          <p class="font-bold text-3xl text-amber-500">Welcome Back!</p>
+        </div>
+        <div>
+          <p class="font-bold text-xl">You are already logged in</p>
+        </div>
+        <div>
+          <button
+            class="border-none bg-gray-600 text-white py-2 px-3 rounded-xl font-semibold"
+            @click="router.push('/me')"
+          >
+            Go to Profile &rarr;
+          </button>
+        </div>
+
+        <div>
+          <button
+            @click="handleLogOut"
+            style="
+              background-color: red;
+              padding: 10px;
+              color: white;
+              border: none;
+              font-size: 15px;
+              font-weight: bold;
+              border-radius: 15px;
+            "
+          >
+            Log Out
+          </button>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
-<style scoped>
+<!-- <style scoped>
 .animated-btn {
   position: relative;
   padding: 12px 24px;
@@ -122,4 +153,4 @@ const handleLogOut = async () => {
   box-shadow: 0 0 10px rgba(79, 70, 229, 0.4);
   transform: scale(1.05);
 }
-</style>
+</style> -->

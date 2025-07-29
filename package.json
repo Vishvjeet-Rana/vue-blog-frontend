@@ -9,12 +9,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.1.11",
     "axios": "^1.11.0",
+    "canvas-confetti": "^1.9.3",
     "pinia": "^3.0.3",
+    "tailwindcss": "^4.1.11",
     "vue": "^3.5.17",
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
+    "@types/canvas-confetti": "^1.9.0",
     "@vitejs/plugin-vue": "^6.0.0",
     "@vue/tsconfig": "^0.7.0",
     "typescript": "~5.8.3",

@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { useAuthStore } from "../../store/auth";
 import { useRouter } from "vue-router";
 import { fetchCurrentUser, register } from "../../services/auth";
+import confetti from "canvas-confetti";
 
 const authStore = useAuthStore();
 const router = useRouter();
@@ -19,6 +20,15 @@ const handleImageUpload = (e: Event) => {
   if (target.files && target.files[0]) {
     image.value = target.files[0];
   }
+};
+
+// 🎉 Confetti function
+const celebrate = () => {
+  confetti({
+    particleCount: 100,
+    spread: 70,
+    origin: { y: 0.6 },
+  });
 };
 
 const handleRegister = async () => {
@@ -41,13 +51,13 @@ const handleRegister = async () => {
     const user = await fetchCurrentUser(access_token);
     authStore.setAuth(access_token, user);
 
-    // name.value = "";
-    // email.value = "";
-    // password.value = "";
-    // image.value = null;
+    // 🎉 Trigger celebration
+    celebrate();
 
-    // redirect to /me
-    router.push("/me");
+    // 🎉 Wait 1.5 seconds before redirect so user sees confetti
+    setTimeout(() => {
+      router.push("/me");
+    }, 1500);
   } catch (error: any) {
     error.value = error.response?.data?.message || "Registration failed";
   }
@@ -55,32 +65,84 @@ const handleRegister = async () => {
 </script>
 
 <template>
-  <div>
-    <h1>Register Page</h1>
+  <div
+    class="h-screen w-screen flex flex-col justify-center items-center gap-7 bg-gray-200"
+  >
+    <div>
+      <h1 class="text-blue-600 font-bold text-4xl">Register Page</h1>
+    </div>
 
     <!-- will add forms here -->
-    <form @submit.prevent="handleRegister" enctype="multipart/form-data">
-      <input
-        v-model="name"
-        placeholder="Enter Name"
-        type="text"
-        required
-      /><br /><br />
-      <input
-        v-model="email"
-        placeholder="Enter Email"
-        type="email"
-        required
-      /><br /><br />
-      <input
-        v-model="password"
-        placeholder="Enter Password"
-        type="password"
-        required
-      /><br /><br />
-      <input @change="handleImageUpload" type="file" accept="image/*" />
-      <button type="submit">Register</button>
-    </form>
+    <div
+      class="flex flex-col bg-white drop-shadow-gray-600 shadow-2xl rounded-2xl h-[60%] w-[40%]"
+    >
+      <form
+        @submit.prevent="handleRegister"
+        enctype="multipart/form-data"
+        class="p-3"
+      >
+        <div class="p-4">
+          <label class="font-semibold text-lg" for="name">Enter Name:</label>
+          <br />
+          <input
+            class="border-b rounded-sm"
+            id="name"
+            v-model="name"
+            placeholder="Enter Name"
+            type="text"
+            required
+          />
+        </div>
+        <br />
+        <div class="p-4">
+          <label class="font-semibold text-lg" for="email">Enter Email:</label>
+          <br />
+          <input
+            class="border-b rounded-sm"
+            id="email"
+            v-model="email"
+            placeholder="Enter Email"
+            type="email"
+            required
+          />
+        </div>
+        <br />
+        <div class="p-4">
+          <label class="font-semibold text-lg" for="password"
+            >Enter Strong Password:</label
+          >
+          <br />
+          <input
+            class="border-b rounded-sm"
+            id="password"
+            v-model="password"
+            placeholder="Enter Password"
+            type="password"
+            required
+          />
+        </div>
+        <br />
+        <div class="p-4">
+          <label class="font-semibold text-lg" for="image">Choose Image:</label>
+          <br />
+          <input
+            class="border-b rounded-sm"
+            id="image"
+            @change="handleImageUpload"
+            type="file"
+            accept="image/*"
+          />
+        </div>
+        <div class="p-4">
+          <button
+            class="border-2 border-none py-2 px-4 rounded-xl font-black bg-amber-400"
+            type="submit"
+          >
+            Register &rarr;
+          </button>
+        </div>
+      </form>
+    </div>
 
     <p v-if="error" style="color: red">{{ error }}</p>
   </div>
