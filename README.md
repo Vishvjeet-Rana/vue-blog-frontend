@@ -20,6 +20,7 @@ A full-stack blog platform built with **NestJS**, **Prisma**, and **PostgreSQL**
 - **State Management**: [Pinia](https://pinia.vuejs.org/)
 - **Routing**: Vue Router
 - **HTTP**: Axios
+- **Styling**: Tailwind CSS
 
 ---
 
