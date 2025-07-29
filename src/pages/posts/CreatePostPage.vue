@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { createPost } from "../../services/post";
+import confetti from "canvas-confetti";
 
 const title = ref("");
 const content = ref("");
@@ -9,6 +10,15 @@ const router = useRouter();
 const file = ref<File | null>(null);
 const message = ref("");
 const error = ref("");
+
+// 🎉 Confetti function
+const celebrate = () => {
+  confetti({
+    particleCount: 100,
+    spread: 70,
+    origin: { y: 0.6 },
+  });
+};
 
 const handleCreatePost = async () => {
   try {
@@ -27,7 +37,13 @@ const handleCreatePost = async () => {
     message.value = "Post created successfully!";
     error.value = "";
 
-    router.push("/posts");
+    // 🎉 Trigger celebration
+    celebrate();
+
+    // 🎉 Wait 1.5 seconds before redirect so user sees confetti
+    setTimeout(() => {
+      router.push("/posts");
+    }, 1500);
   } catch (error: any) {
     error.value = error.response?.data?.message;
     message.value = "";
@@ -43,29 +59,67 @@ const handleFileChange = (e: Event) => {
 </script>
 
 <template>
-  <h2>Create A New Blog Post</h2>
+  <div
+    class="h-screen w-screen flex flex-col justify-center items-center gap-7 bg-gray-200"
+  >
+    <div>
+      <h2 class="text-blue-600 font-bold text-4xl">Create A New Blog Post</h2>
+    </div>
 
-  <div>
-    <form @submit.prevent="handleCreatePost">
-      <input
-        v-model="title"
-        type="text"
-        placeholder="Enter Title"
-        required
-      /><br />
-      <textarea
-        v-model="content"
-        type="text"
-        placeholder="Enter Content"
-        required
-        rows="6"
-        cols="40"
-      ></textarea
-      ><br />
-      <input type="file" @change="handleFileChange" />
-      <br /><br />
-      <button type="submit">Create Post</button>
-    </form>
+    <div
+      class="flex flex-col bg-white drop-shadow-gray-600 shadow-2xl rounded-2xl h-[60%] w-[40%]"
+    >
+      <form
+        @submit.prevent="handleCreatePost"
+        enctype="multipart/form-data"
+        class="p-3"
+      >
+        <div class="p-4">
+          <label class="font-semibold text-lg" for="title">Title:</label><br />
+          <input
+            class="border-b rounded-sm"
+            id="title"
+            v-model="title"
+            type="text"
+            placeholder="Enter Title"
+            required
+          />
+        </div>
+        <div class="p-4">
+          <label class="font-semibold text-lg" for="content">Content:</label
+          ><br />
+          <textarea
+            class="overflow-hidden rounded-sm border"
+            id="content"
+            v-model="content"
+            type="text"
+            placeholder="Enter Content"
+            required
+            rows="6"
+            cols="35"
+          ></textarea>
+        </div>
+        <div class="p-4">
+          <label class="font-semibold text-lg" for="file">Select Image:</label
+          ><br />
+          <input
+            class="border-b rounded-sm"
+            id="file"
+            type="file"
+            @change="handleFileChange"
+          />
+        </div>
+
+        <div class="p-4">
+          <button
+            class="border-2 border-none py-2 px-4 rounded-xl font-black bg-amber-400"
+            type="submit"
+          >
+            Create Post
+          </button>
+        </div>
+      </form>
+    </div>
 
     <p style="color: greenyellow">{{ message }}</p>
     <p style="color: red">{{ error }}</p>

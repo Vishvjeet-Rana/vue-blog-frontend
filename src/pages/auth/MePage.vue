@@ -143,6 +143,7 @@ console.log("🧪 User object:", user);
         v-if="user?.role.toLocaleLowerCase() === 'admin'"
         @click="router.push('/admin')"
       >
+        <span class="text-xl">👑</span>
         Admin Space
       </button>
     </div>
