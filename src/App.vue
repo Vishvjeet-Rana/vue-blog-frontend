@@ -21,18 +21,34 @@ const isLoggedIn = computed(() => !!authStore.token);
 </script>
 
 <template>
-  <div>
-    <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/posts">All Posts</router-link> |
+  <div class="bg-gray-200 h-20 m-auto flex justify-center items-center">
+    <nav
+      class="bg-blue-400 h-[95%] w-[95%] rounded-4xl flex items-center p-3 gap-3 mt-5"
+    >
+      <router-link class="text-lg font-bold text-white" to="/"
+        >Home</router-link
+      >
+      |
+      <router-link class="text-lg font-bold text-white" to="/posts"
+        >All Posts</router-link
+      >
+      |
 
       <template v-if="!isLoggedIn">
-        <router-link to="/login">Login</router-link> |
-        <router-link to="/register">Register</router-link>
+        <router-link class="text-lg font-bold text-white" to="/login"
+          >Login</router-link
+        >
+        |
+        <router-link class="text-lg font-bold text-white" to="/register"
+          >Register</router-link
+        >
       </template>
 
       <template v-else>
-        <router-link to="/me">My Profile</router-link> |
+        <router-link class="text-lg font-bold text-white" to="/me"
+          >My Profile</router-link
+        >
+        |
       </template>
     </nav>
   </div>

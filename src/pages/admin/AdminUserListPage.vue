@@ -46,58 +46,59 @@ const viewUser = (id: string) => {
 
 onMounted(fetchAllUser);
 </script>
-
 <template>
-  <div>
-    <h1>All Users</h1>
+  <div class="p-6 bg-gray-200">
+    <h1 class="text-2xl font-bold mb-4 text-blue-800">All Users</h1>
 
-    <p v-if="error" style="color: red">{{ error }}</p>
+    <p v-if="error" class="text-red-600 mb-4">{{ error }}</p>
 
-    <table v-if="users.length">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Role</th>
-          <th>Verified</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="user in users" :key="user.id">
-          <td>{{ user.name }}</td>
-          <td>{{ user.email }}</td>
-          <td>{{ user.role }}</td>
-          <td v-if="user.role !== `ADMIN`">
-            {{ user.verified ? "Yes" : "No" }}
-          </td>
-          <td v-else>Don't Need</td>
-          <td>
-            <button @click="viewUser(user.id)">View</button>
-            <button @click="handleDelete(user.id)">Delete</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div v-if="users.length" class="overflow-x-auto">
+      <table
+        class="min-w-full bg-white border border-gray-300 rounded-lg shadow"
+      >
+        <thead class="bg-gray-100 text-gray-700">
+          <tr>
+            <th class="px-4 py-2 text-left">Name</th>
+            <th class="px-4 py-2 text-left">Email</th>
+            <th class="px-4 py-2 text-left">Role</th>
+            <th class="px-4 py-2 text-left">Verified</th>
+            <th class="px-4 py-2 text-left">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="user in users"
+            :key="user.id"
+            class="border-t hover:bg-gray-50"
+          >
+            <td class="px-4 py-2">{{ user.name }}</td>
+            <td class="px-4 py-2">{{ user.email }}</td>
+            <td class="px-4 py-2 capitalize">{{ user.role.toLowerCase() }}</td>
+            <td class="px-4 py-2">
+              <span v-if="user.role !== 'ADMIN'">
+                {{ user.verified ? "Yes" : "No" }}
+              </span>
+              <span v-else class="text-gray-400 italic">Don't Need</span>
+            </td>
+            <td class="px-4 py-2 space-x-2">
+              <button
+                @click="viewUser(user.id)"
+                class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition"
+              >
+                View
+              </button>
+              <button
+                @click="handleDelete(user.id)"
+                class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-    <p v-else>No Users Found.</p>
+    <p v-else class="text-gray-600 mt-4">No Users Found.</p>
   </div>
 </template>
-
-<style scoped>
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 30px;
-}
-th,
-td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: center;
-}
-button {
-  margin: 0 5px;
-  cursor: pointer;
-}
-</style>

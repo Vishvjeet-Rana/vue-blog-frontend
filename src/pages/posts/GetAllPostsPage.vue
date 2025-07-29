@@ -48,60 +48,67 @@ const handleDeletePost = async (id: string) => {
 </script>
 
 <template>
-  <div>
-    <h1>All Blog Posts</h1>
+  <div class="bg-gray-200 flex flex-col items-center">
+    <div class="w-full h-20 flex items-center justify-center">
+      <h1 class="font-bold text-blue-500 text-4xl">All Blog Posts</h1>
+    </div>
     <p v-if="error" style="color: red">{{ error }}</p>
 
-    <div v-if="posts.length">
+    <div v-if="posts.length" class="flex flex-col items-center w-full h-full">
       <div
+        class="w-[95%] rounded-2xl border border-gray-700 bg-blue-50"
         v-for="post in posts"
         :key="post.id"
         style="border: 1px solid #ddd; padding: 10px; margin-bottom: 20px"
       >
-        <h3>Title: {{ post.title }}</h3>
-        <p>Content: {{ post.content }}</p>
+        <h3 class="text-2xl font-semibold">{{ post.title }}</h3>
+        <p>{{ post.content }}</p>
 
-        <div v-if="post.image">
-          <img
-            :src="`http://localhost:3000/uploads/${post.image}`"
-            width="200"
-            height="300"
-          />
+        <div class="h-full w-full flex items-center justify-center">
+          <div
+            v-if="post.image"
+            class="w-[40%] h-[40%] flex items-center justify-center rounded-full overflow-hidden my-4"
+          >
+            <img
+              class="object-cover h-50 w-50 rounded-2xl"
+              :src="`http://localhost:3000/uploads/${post.image}`"
+              width="200"
+              height="300"
+            />
+          </div>
         </div>
 
-        <!-- ✅ Edit button visible only to owner -->
-        <button
-          v-if="authStore.user?.id === post.authorId"
-          @click="router.push(`/post/${post.id}/update`)"
-        >
-          Edit
-        </button>
+        <div class="flex gap-2">
+          <!-- ✅ Edit button visible only to owner -->
+          <div class="mb-2">
+            <button
+              class="bg-green-200 px-5 py-2 rounded-2xl text-green-950"
+              v-if="authStore.user?.id === post.authorId"
+              @click="router.push(`/post/${post.id}/update`)"
+            >
+              Edit
+            </button>
+          </div>
 
+          <!-- ✅ Only show if user is logged in and owns the post -->
+          <div>
+            <button
+              v-if="
+                authStore.user?.id === post.authorId ||
+                authStore.user?.role === 'ADMIN'
+              "
+              @click="handleDeletePost(post.id)"
+              class="px-5 py-2 rounded-2xl bg-red-500 text-red-950"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
         <br />
-        <br />
-        <!-- ✅ Only show if user is logged in and owns the post -->
-        <button
-          v-if="
-            authStore.user?.id === post.authorId ||
-            authStore.user?.role === 'ADMIN'
-          "
-          @click="handleDeletePost(post.id)"
-          style="
-            background-color: red;
-            color: white;
-
-            border: none;
-            padding: 7px;
-            font-weight: bold;
-          "
-        >
-          Delete
-        </button>
-        <br />
-        <small
-          >Author: {{ post.author?.name }} ({{ post.author?.email }})</small
-        >
-        <router-link :to="`/post/${post.id}`">Read More</router-link>
+        <small>Author: {{ post.author?.name }} </small>
+        <span class="ml-3 text-sm text-blue-600 underline">
+          <router-link :to="`/post/${post.id}`">View Post</router-link>
+        </span>
       </div>
     </div>
 

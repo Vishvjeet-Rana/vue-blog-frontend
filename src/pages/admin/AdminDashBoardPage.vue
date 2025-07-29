@@ -13,64 +13,35 @@ const goToCreateUser = () => {
 </script>
 
 <template>
-  <div class="dashboard">
-    <h1>Admin Dashboard</h1>
+  <div class="h-screen w-full bg-gray-200 flex justify-center">
+    <div
+      class="bg-white rounded-2xl flex flex-col items-center w-[60%] h-[30%] mt-7"
+    >
+      <div class="h-16 w-[50%] flex items-center justify-center">
+        <h1 class="text-blue-500 font-bold text-3xl">Admin Dashboard</h1>
+      </div>
 
-    <div class="button-group">
-      <button class="admin-btn" @click="goToUserList">👥 Manage Users</button>
-      <button class="admin-btn" @click="goToCreateUser">
-        ➕ Create New User
-      </button>
+      <div class="h-20 w-[60%] flex items-center justify-center">
+        <button
+          class="border-none bg-teal-500 rounded-2xl m-auto py-3 px-3"
+          @click="goToUserList"
+        >
+          👥 Manage Users
+        </button>
+        <button
+          class="border-none bg-teal-500 rounded-2xl m-auto py-3 px-3"
+          @click="goToCreateUser"
+        >
+          ➕ Create New User
+        </button>
+      </div>
+
+      <div class="p-5">
+        <p class="text-violet-900 font-semibold">
+          Welcome to the Admin Dashboard - manage your users efficiently and
+          create new ones with ease.
+        </p>
+      </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.dashboard {
-  text-align: center;
-  margin-top: 50px;
-}
-
-.button-group {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 30px;
-}
-
-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-}
-</style>
-
-<style scoped>
-.admin-btn {
-  display: inline-block;
-  background-color: palevioletred;
-  color: #fff;
-  font-weight: bolder;
-  font-size: 15px;
-  padding: 10px 18px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  transition: background 0.2s;
-  text-decoration: none;
-  font-weight: 500;
-  margin-top: 20px;
-}
-
-.dashboard {
-  text-align: center;
-  margin-top: 50px;
-}
-
-.button-group {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 30px;
-}
-</style>

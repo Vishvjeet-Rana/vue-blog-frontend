@@ -12,35 +12,46 @@ const error = ref("");
 onMounted(async () => {
   try {
     post.value = await getPostById(postId);
+    console.log("POST DATA:", post.value);
   } catch (err: any) {
     error.value = err.response?.data?.message || "Failed to load post";
   }
 });
+
+function formatDate(dateStr: string) {
+  const date = new Date(dateStr);
+  return date.toLocaleString(); // You can use toLocaleDateString() if you want only date
+}
 </script>
+
 <template>
-  <div class="single-post">
-    <h2>📝 Post Details</h2>
+  <div class="bg-gray-200 h-screen w-full flex items-center justify-center">
+    <div class="h-[70%] w-[60%] bg-white rounded-2xl p-5">
+      <h2 class="text-blue-400 font-semibold text-3xl my-2">📝 Post Details</h2>
 
-    <p v-if="error" style="color: red">{{ error }}</p>
+      <p v-if="error" style="color: red">{{ error }}</p>
 
-    <div v-if="post">
-      <h3>{{ post.title }}</h3>
-      <p><strong>Author:</strong> {{ post.author?.name }}</p>
-      <img
-        v-if="post.image"
-        :src="`http://localhost:3000/uploads/${post.image}`"
-        alt="Post Image"
-        style="max-width: 100%; margin: 10px 0"
-      />
-      <p>{{ post.content }}</p>
+      <div v-if="post">
+        <h3 class="text-blue-950 font-semibold text-xl">
+          Title: {{ post.title }}
+        </h3>
+        <p><strong>Author:</strong> {{ post.author?.name }}</p>
+        <div class="h-60 w-60 flex items-center justify-center my-10">
+          <img
+            class="h-full w-full object-cover"
+            v-if="post.image"
+            :src="`http://localhost:3000/uploads/${post.image}`"
+            alt="Post Image"
+          />
+        </div>
+        <!-- content -->
+        <div class="mb-3">
+          <p><span class="font-bold">Content: </span>{{ post.content }}</p>
+        </div>
+
+        <p><strong>Created At:</strong> {{ formatDate(post.createdAt) }}</p>
+        <p><strong>Updated At:</strong> {{ formatDate(post.updatedAt) }}</p>
+      </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.single-post {
-  max-width: 700px;
-  margin: 20px auto;
-  padding: 10px;
-}
-</style>
