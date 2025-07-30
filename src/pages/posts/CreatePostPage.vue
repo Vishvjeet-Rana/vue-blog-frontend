@@ -1,61 +1,13 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import { createPost } from "../../services/post";
-import confetti from "canvas-confetti";
+import { usePostStore } from "../../store/post";
 
-const title = ref("");
-const content = ref("");
-const router = useRouter();
-const file = ref<File | null>(null);
-const message = ref("");
-const error = ref("");
+import { storeToRefs } from "pinia";
 
-// 🎉 Confetti function
-const celebrate = () => {
-  confetti({
-    particleCount: 100,
-    spread: 70,
-    origin: { y: 0.6 },
-  });
-};
+const postStore = usePostStore();
+const { title, content, message, error } = storeToRefs(postStore);
+const { handleCreatePost, handleFileChange } = postStore;
 
-const handleCreatePost = async () => {
-  try {
-    if (!title || !content) {
-      error.value = "Title and content is required";
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("title", title.value);
-    formData.append("content", content.value);
-    if (file.value) formData.append("image", file.value);
-
-    await createPost(formData);
-
-    message.value = "Post created successfully!";
-    error.value = "";
-
-    // 🎉 Trigger celebration
-    celebrate();
-
-    // 🎉 Wait 1.5 seconds before redirect so user sees confetti
-    setTimeout(() => {
-      router.push("/posts");
-    }, 1500);
-  } catch (error: any) {
-    error.value = error.response?.data?.message;
-    message.value = "";
-  }
-};
-
-const handleFileChange = (e: Event) => {
-  const target = e.target as HTMLInputElement;
-  if (target.files && target.files[0]) {
-    file.value = target.files[0];
-  }
-};
+postStore;
 </script>
 
 <template>

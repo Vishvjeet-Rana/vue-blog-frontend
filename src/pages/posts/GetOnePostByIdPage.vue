@@ -26,7 +26,7 @@ function formatDate(dateStr: string) {
 
 <template>
   <div class="bg-gray-200 h-screen w-full flex items-center justify-center">
-    <div class="h-[70%] w-[60%] bg-white rounded-2xl p-5">
+    <div class="h-[70%] w-[60%] bg-white rounded-3xl p-5 overflow-y-auto">
       <h2 class="text-blue-400 font-semibold text-3xl my-2">📝 Post Details</h2>
 
       <p v-if="error" style="color: red">{{ error }}</p>
