@@ -1,46 +1,45 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import api from "../../services/api";
+import { onMounted } from "vue";
 
-const router = useRouter();
-const route = useRoute();
-const userId = route.params.id as string;
+import { useAdminStore } from "../../store/admin";
+import { storeToRefs } from "pinia";
 
-const name = ref("");
-const email = ref("");
-const role = ref("USER");
+const adminStore = useAdminStore();
 
-const success = ref("");
-const error = ref("");
+const { error, success, name, email, role } = storeToRefs(adminStore);
 
-const fetchUser = async () => {
-  try {
-    const res = await api.get(`/users/${userId}`);
-    const user = res.data;
-    name.value = user.name;
-    email.value = user.email;
-    role.value = user.role.toUpperCase();
-  } catch (error: any) {
-    error.value = error.response?.data?.message || "Failed to load user.";
-  }
-};
+const { handleUpdate, fetchUser } = adminStore;
 
-const handleUpdate = async () => {
-  try {
-    const payload: any = {};
-    if (name.value) payload.name = name.value;
-    if (email.value) payload.email = email.value;
-    if (role.value) payload.role = role.value;
+// const route = useRoute();
+// const userId = route.params.id as string;
 
-    await api.put(`/users/${userId}`, payload);
-    success.value = "User updated sucessfully!";
-    error.value = "";
-    setTimeout(() => router.push(`/admin/users/${userId}`), 1500);
-  } catch (error: any) {
-    error.value = error.response?.data?.message || "Failed to update user.";
-  }
-};
+// const fetchUser = async () => {
+//   try {
+//     const res = await api.get(`/users/${userId}`);
+//     const user = res.data;
+//     name.value = user.name;
+//     email.value = user.email;
+//     role.value = user.role.toUpperCase();
+//   } catch (error: any) {
+//     error.value = error.response?.data?.message || "Failed to load user.";
+//   }
+// };
+
+// const handleUpdate = async () => {
+//   try {
+//     const payload: any = {};
+//     if (name.value) payload.name = name.value;
+//     if (email.value) payload.email = email.value;
+//     if (role.value) payload.role = role.value;
+
+//     await api.put(`/users/${userId}`, payload);
+//     success.value = "User updated sucessfully!";
+//     error.value = "";
+//     setTimeout(() => router.push(`/admin/users/${userId}`), 1500);
+//   } catch (error: any) {
+//     error.value = error.response?.data?.message || "Failed to update user.";
+//   }
+// };
 
 onMounted(fetchUser);
 </script>

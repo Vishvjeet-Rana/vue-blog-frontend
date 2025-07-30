@@ -1,32 +1,11 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import api from "../../services/api";
+import { storeToRefs } from "pinia";
+import { useAdminStore } from "../../store/admin";
 
-const name = ref("");
-const email = ref("");
-const role = ref("USER");
-const router = useRouter();
+const adminStore = useAdminStore();
 
-const success = ref("");
-const error = ref("");
-
-const handleSubmit = async () => {
-  try {
-    const payload = {
-      name: name.value,
-      email: email.value,
-      role: role.value,
-    };
-    const res = await api.post("/users", payload);
-    success.value = res.data.message;
-    router.push(`/admin/users`);
-    error.value = "";
-  } catch (error: any) {
-    success.value = "";
-    error.value = error.response?.data?.message || "Failed to create user.";
-  }
-};
+const { error, success, name, email, role } = storeToRefs(adminStore);
+const { handleSubmit } = adminStore;
 </script>
 
 <template>

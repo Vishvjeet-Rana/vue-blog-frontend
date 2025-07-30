@@ -1,48 +1,22 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import api from "../../services/api";
+import { useAdminStore } from "../../store/admin";
+import { storeToRefs } from "pinia";
 
-const route = useRoute();
-const error = ref("");
-const success = ref("");
+const adminStore = useAdminStore();
+
+const { handleDelete, handleVerify, fetchUser } = adminStore;
+const { error, success } = storeToRefs(adminStore);
+
 const user = ref<any>(null);
-const userId = route.params.id as string;
 const router = useRouter();
+const route = useRoute();
 
-const fetchUser = async () => {
-  try {
-    const res = await api.get(`/users/${userId}`);
-    user.value = res.data;
-  } catch (err: any) {
-    error.value = err.response?.data?.message || "Failed to fetch user details";
-  }
-};
-
-onMounted(fetchUser);
-
-const handleDelete = async () => {
-  const confirm = window.confirm("Are you sure you want to delete this user?");
-  if (confirm) {
-    try {
-      await api.delete(`users/${userId}`);
-      success.value = "User deleted successfully!";
-      router.push("/admin/users");
-    } catch (error: any) {
-      error.value = error.response?.data?.message || "Failed to delete user.";
-    }
-  }
-};
-
-const handleVerify = async () => {
-  try {
-    await api.patch(`/users/${userId}`);
-    success.value = "User verified successfully!";
-    await fetchUser();
-  } catch (error: any) {
-    error.value = error.response?.data?.message || "Failed to verify user.";
-  }
-};
+onMounted(async () => {
+  const userId = route.params.id as string;
+  user.value = await fetchUser(userId);
+});
 </script>
 
 <template>

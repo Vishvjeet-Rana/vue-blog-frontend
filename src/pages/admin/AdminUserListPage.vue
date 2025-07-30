@@ -1,44 +1,48 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { getAllUsers, deleteUser } from "../../services/admin";
+import { useAdminStore } from "../../store/admin";
+import { storeToRefs } from "pinia";
 
-// Define the user type
-interface AdminUser {
-  id: string;
-  name: string;
-  email: string;
-  role: "USER" | "ADMIN";
-  verified: boolean;
-  createdAt: string;
-}
+const adminStore = useAdminStore();
+
+const { fetchAllUser, handleDelete } = adminStore;
+const { error, users } = storeToRefs(adminStore);
+// // Define the user type
+// interface AdminUser {
+//   id: string;
+//   name: string;
+//   email: string;
+//   role: "USER" | "ADMIN";
+//   verified: boolean;
+//   createdAt: string;
+// }
 
 const router = useRouter();
-const users = ref<AdminUser[]>([]);
-const error = ref("");
+// const users = ref<AdminUser[]>([]);
 
-const fetchAllUser = async () => {
-  try {
-    const res = await getAllUsers();
-    users.value = res;
-  } catch (error: any) {
-    error.value = error.response?.data?.message || "FAiled to fetch users";
-  }
-};
+// const fetchAllUser = async () => {
+//   try {
+//     const res = await getAllUsers();
+//     users.value = res;
+//   } catch (error: any) {
+//     error.value = error.response?.data?.message || "Failed to fetch users";
+//   }
+// };
 
-const handleDelete = async (id: string) => {
-  const confirmed = window.confirm(
-    "Are you sure you want to delete this user?"
-  );
-  if (confirmed) {
-    try {
-      await deleteUser(id);
-      users.value = users.value.filter((u: any) => u.id !== id);
-    } catch (error: any) {
-      error.value = error.response?.data?.message || "Failed to delete user";
-    }
-  }
-};
+// const handleDelete = async (id: string) => {
+//   const confirmed = window.confirm(
+//     "Are you sure you want to delete this user?"
+//   );
+//   if (confirmed) {
+//     try {
+//       await deleteUser(id);
+//       users.value = users.value.filter((u: any) => u.id !== id);
+//     } catch (error: any) {
+//       error.value = error.response?.data?.message || "Failed to delete user";
+//     }
+//   }
+// };
 
 const viewUser = (id: string) => {
   router.push(`/admin/users/${id}`);
