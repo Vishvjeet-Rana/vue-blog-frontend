@@ -1,24 +1,13 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { forgotPassword } from "../../services/auth";
+import { useAuthFormStore } from "../../store/authForm";
+import { storeToRefs } from "pinia";
+
+const authFormStore = useAuthFormStore();
+
+const { error, message, email } = storeToRefs(authFormStore);
+const { handleForgot } = authFormStore;
 
 const emit = defineEmits(["back"]);
-const email = ref("");
-const message = ref("");
-const error = ref("");
-
-const handleForgot = async () => {
-  try {
-    const res = await forgotPassword(email.value);
-    message.value = res.message;
-    error.value = "";
-  } catch (error: any) {
-    error.vale =
-      error.response?.data?.message ||
-      "Something went wrong in forgot password";
-    message.value = "";
-  }
-};
 </script>
 
 <template>
@@ -66,7 +55,7 @@ const handleForgot = async () => {
     >
       &larr; Go Back
     </button>
-    <p style="color: greenyellow">{{ message }}</p>
+    <p style="color: green">{{ message }}</p>
     <p style="color: red">{{ error }}</p>
   </div>
 </template>

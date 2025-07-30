@@ -1,28 +1,13 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import { changePassword } from "../../services/auth";
+import { useAuthFormStore } from "../../store/authForm";
+import { storeToRefs } from "pinia";
 
-const router = useRouter();
+const authFormStore = useAuthFormStore();
+
+const { error, message, newPassword, oldPassword } = storeToRefs(authFormStore);
+const { handleChangePass } = authFormStore;
 
 const emit = defineEmits(["back"]);
-const oldPassword = ref("");
-const newPassword = ref("");
-const error = ref("");
-const message = ref("");
-
-const handleChangePass = async () => {
-  try {
-    const response = await changePassword(oldPassword.value, newPassword.value);
-    message.value = response.message;
-
-    router.push("/login");
-  } catch (error: any) {
-    error.value =
-      error.response?.data?.message ||
-      "Something went wrong in change password";
-  }
-};
 </script>
 
 <template>

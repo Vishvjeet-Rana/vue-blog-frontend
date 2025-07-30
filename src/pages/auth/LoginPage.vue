@@ -1,47 +1,11 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { useAuthStore } from "../../store/auth";
-import { useRouter } from "vue-router";
-import { fetchCurrentUser, login } from "../../services/auth";
-import confetti from "canvas-confetti";
+import { storeToRefs } from "pinia";
+import { useAuthFormStore } from "../../store/authForm";
 
-const authStore = useAuthStore();
-const router = useRouter();
+const authFormStore = useAuthFormStore();
 
-const email = ref("");
-const password = ref("");
-const error = ref("");
-
-// 🎉 Confetti function
-const celebrate = () => {
-  confetti({
-    particleCount: 100,
-    spread: 70,
-    origin: { y: 0.6 },
-  });
-};
-
-const handleLogin = async () => {
-  try {
-    const { access_token } = await login({
-      email: email.value,
-      password: password.value,
-    });
-
-    const user = await fetchCurrentUser(access_token);
-    authStore.setAuth(access_token, user);
-
-    // 🎉 Trigger celebration
-    celebrate();
-
-    // 🎉 Wait 1.5 seconds before redirect so user sees confetti
-    setTimeout(() => {
-      router.push("/me");
-    }, 1500);
-  } catch (err: any) {
-    error.value = err.response?.data?.message || "Login failed";
-  }
-};
+const { error, email, password } = storeToRefs(authFormStore);
+const { handleLogin } = authFormStore;
 </script>
 
 <template>
