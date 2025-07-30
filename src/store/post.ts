@@ -1,25 +1,15 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import {
-  createPost,
-  deletePost,
-  getAllPosts,
-  updatePost,
-} from "../services/post";
+import { createPost, updatePost } from "../services/post";
 import confetti from "canvas-confetti";
-import { useRouter, useRoute } from "vue-router";
+import { useRouter } from "vue-router";
 
 export const usePostStore = defineStore("post", () => {
-  const router = useRouter();
-  const route = useRoute();
-
   const title = ref("");
   const content = ref("");
   const file = ref<File | null>(null);
   const message = ref("");
   const error = ref("");
-
-  const postId = route.params.id as string;
 
   // for adding confetti
   // 🎉 Confetti function
@@ -64,11 +54,6 @@ export const usePostStore = defineStore("post", () => {
 
       // 🎉 Trigger celebration
       celebrate();
-
-      // 🎉 Wait 1.5 seconds before redirect so user sees confetti
-      setTimeout(() => {
-        router.push("/posts");
-      }, 1500);
     } catch (error: any) {
       error.value = error.response?.data?.message;
       message.value = "";
@@ -77,6 +62,8 @@ export const usePostStore = defineStore("post", () => {
 
   // for updating post
   async function handleUpdatePost(postId: string) {
+    const router = useRouter();
+
     try {
       const formData = new FormData();
       formData.append("title", title.value);
@@ -104,8 +91,6 @@ export const usePostStore = defineStore("post", () => {
     error,
     handleCreatePost,
     handleFileChange,
-
-    postId,
     handleUpdatePost,
   };
 });

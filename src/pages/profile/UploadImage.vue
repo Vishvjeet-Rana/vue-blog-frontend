@@ -1,39 +1,52 @@
 <script setup lang="ts">
-import { useAuthStore } from "../../store/auth";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
-import { uploadImage } from "../../services/auth";
+import { useProfileStore } from "../../store/profile";
+import { storeToRefs } from "pinia";
 
-const authStore = useAuthStore();
 const file = ref<File | null>(null);
 
 const router = useRouter();
-const message = ref("");
-const error = ref("");
+// const message = ref("");
+// const error = ref("");
 const emit = defineEmits(["back"]);
+const profileStore = useProfileStore();
+const { error, message } = storeToRefs(profileStore);
+const { handleUploadImage } = profileStore;
 
-const handleUploadImage = async () => {
-  try {
-    if (!file.value) {
-      error.value = "Please select an image";
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("image", file.value);
-
-    const res = await uploadImage(formData);
-    authStore.setAuth(authStore.token!, res);
-    router.push("/me");
-    message.value = "Image Uploaded successfully";
-    error.value = "";
-  } catch (error: any) {
-    error.value =
-      error.response?.data?.message ||
-      "Something went wrong in uploading image";
-    message.value = "";
+const handleUpload = () => {
+  if (!file.value) {
+    error.value = "Please select an image";
+    return;
   }
+  const formData = new FormData();
+  formData.append("image", file.value);
+
+  handleUploadImage(formData);
 };
+
+// const handleUploadImage = async () => {
+//   try {
+//     if (!file.value) {
+//       error.value = "Please select an image";
+//       return;
+//     }
+
+//     const formData = new FormData();
+//     formData.append("image", file.value);
+
+//     const res = await uploadImage(formData);
+//     authStore.setAuth(authStore.token!, res);
+//     router.push("/me");
+//     message.value = "Image Uploaded successfully";
+//     error.value = "";
+//   } catch (error: any) {
+//     error.value =
+//       error.response?.data?.message ||
+//       "Something went wrong in uploading image";
+//     message.value = "";
+//   }
+// };
 
 const handleFileChange = (e: Event) => {
   const target = e.target as HTMLInputElement;
@@ -54,7 +67,7 @@ const handleFileChange = (e: Event) => {
     <div
       class="flex flex-col bg-white drop-shadow-gray-600 shadow-2xl rounded-2xl h-[50%] w-[40%]"
     >
-      <form @submit.prevent="handleUploadImage" class="p-3">
+      <form @submit.prevent="handleUpload" class="p-3">
         <div class="p-4">
           <label class="font-semibold text-lg" for="image">Select Image:</label>
           <br /><br />
@@ -86,8 +99,9 @@ const handleFileChange = (e: Event) => {
         &larr; Go Back
       </button>
     </div>
+    <div>
+      <p style="color: greenyellow">{{ message }}</p>
+      <p style="color: red">{{ error }}</p>
+    </div>
   </div>
-
-  <p style="color: greenyellow">{{ message }}</p>
-  <p style="color: red">{{ error }}</p>
 </template>

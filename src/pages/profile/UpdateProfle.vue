@@ -1,52 +1,14 @@
 <script setup lang="ts">
-import { useAuthStore } from "../../store/auth";
 import { useRouter } from "vue-router";
-import { ref } from "vue";
-import { updateProfile } from "../../services/auth";
-import confetti from "canvas-confetti";
+import { useProfileStore } from "../../store/profile";
+import { storeToRefs } from "pinia";
 
-const authStore = useAuthStore();
 const router = useRouter();
 const emit = defineEmits(["back"]);
 
-const name = ref("");
-const email = ref("");
-
-const message = ref("");
-const error = ref("");
-
-// 🎉 Confetti function
-const celebrate = () => {
-  confetti({
-    particleCount: 100,
-    spread: 70,
-    origin: { y: 0.6 },
-  });
-};
-
-const handleProfileUpdate = async () => {
-  try {
-    const payload: { name?: string; email?: string } = {};
-    if (name.value.trim() !== "") payload.name = name.value;
-    if (email.value.trim() !== "") payload.email = email.value;
-
-    const res = await updateProfile(payload);
-    authStore.setAuth(authStore.token!, res);
-    // 🎉 Trigger celebration
-    celebrate();
-
-    // 🎉 Wait 1.5 seconds before redirect so user sees confetti
-    setTimeout(() => {
-      router.push("/me");
-    }, 1500);
-    message.value = "Profile Updated Sucessfully!";
-    error.value = "";
-  } catch (error: any) {
-    error.value =
-      error.response?.data?.message || "Something went wrong in update profile";
-    message.value = "";
-  }
-};
+const profileStore = useProfileStore();
+const { error, message, name, email } = storeToRefs(profileStore);
+const { handleProfileUpdate } = profileStore;
 </script>
 
 <template>

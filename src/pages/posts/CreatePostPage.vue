@@ -1,13 +1,22 @@
+<!-- src/pages/CreatePostPage.vue -->
 <script setup lang="ts">
 import { usePostStore } from "../../store/post";
-
 import { storeToRefs } from "pinia";
+import { useRouter } from "vue-router";
 
+// get refs for reactive binding in template
 const postStore = usePostStore();
 const { title, content, message, error } = storeToRefs(postStore);
 const { handleCreatePost, handleFileChange } = postStore;
 
-postStore;
+const router = useRouter();
+
+async function onSubmit() {
+  await handleCreatePost();
+  setTimeout(() => {
+    router.push("/posts");
+  }, 1500);
+}
 </script>
 
 <template>
@@ -22,7 +31,7 @@ postStore;
       class="flex flex-col bg-white drop-shadow-gray-600 shadow-2xl rounded-2xl h-[60%] w-[40%]"
     >
       <form
-        @submit.prevent="handleCreatePost"
+        @submit.prevent="onSubmit"
         enctype="multipart/form-data"
         class="p-3"
       >
@@ -44,7 +53,6 @@ postStore;
             class="overflow-hidden rounded-sm border"
             id="content"
             v-model="content"
-            type="text"
             placeholder="Enter Content"
             required
             rows="6"
