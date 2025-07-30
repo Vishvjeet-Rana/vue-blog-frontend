@@ -63,7 +63,7 @@ export const useAuthFormStore = defineStore("authForm", () => {
 
       // 🎉 Wait 1.5 seconds before redirect so user sees confetti
       setTimeout(() => {
-        router.push("/me");
+        router.replace("/me");
       }, 1500);
     } catch (err: any) {
       error.value = err.response?.data?.message || "Login failed";
@@ -121,7 +121,7 @@ export const useAuthFormStore = defineStore("authForm", () => {
 
       // 🎉 Wait 1.5 seconds before redirect so user sees confetti
       setTimeout(() => {
-        router.push("/me");
+        router.replace("/me");
       }, 1500);
     } catch (error: any) {
       error.value = error.response?.data?.message || "Registration failed";

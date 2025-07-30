@@ -39,7 +39,7 @@ export const useAdminStore = defineStore("admin", () => {
       const res = await api.post("/users", payload);
       success.value = res.data.message;
       fireConfetti();
-      router.push(`/admin/users`);
+      router.replace(`/admin/users`);
       error.value = "";
     } catch (error: any) {
       success.value = "";
