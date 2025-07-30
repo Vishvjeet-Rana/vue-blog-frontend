@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import api from "../services/api";
 import { getAllUsers } from "../services/admin";
+import { fireConfetti } from "../utils/confetti";
 
 export const useAdminStore = defineStore("admin", () => {
   const name = ref("");
@@ -37,6 +38,7 @@ export const useAdminStore = defineStore("admin", () => {
       };
       const res = await api.post("/users", payload);
       success.value = res.data.message;
+      fireConfetti();
       router.push(`/admin/users`);
       error.value = "";
     } catch (error: any) {

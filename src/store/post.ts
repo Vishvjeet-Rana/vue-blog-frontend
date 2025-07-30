@@ -1,8 +1,9 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { createPost, updatePost } from "../services/post";
-import confetti from "canvas-confetti";
+
 import { useRouter } from "vue-router";
+import { fireConfetti } from "../utils/confetti";
 
 export const usePostStore = defineStore("post", () => {
   const title = ref("");
@@ -10,16 +11,6 @@ export const usePostStore = defineStore("post", () => {
   const file = ref<File | null>(null);
   const message = ref("");
   const error = ref("");
-
-  // for adding confetti
-  // 🎉 Confetti function
-  function celebrate() {
-    confetti({
-      particleCount: 100,
-      spread: 70,
-      origin: { y: 0.6 },
-    });
-  }
 
   // for handling file changes (uploading file)
   function handleFileChange(e: Event) {
@@ -53,7 +44,7 @@ export const usePostStore = defineStore("post", () => {
       error.value = "";
 
       // 🎉 Trigger celebration
-      celebrate();
+      fireConfetti();
     } catch (error: any) {
       error.value = error.response?.data?.message;
       message.value = "";

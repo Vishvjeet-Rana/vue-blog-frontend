@@ -2,8 +2,9 @@ import { defineStore } from "pinia";
 import { updateProfile, uploadImage } from "../services/auth";
 import { ref } from "vue";
 import { useAuthStore } from "./auth";
-import confetti from "canvas-confetti";
+
 import { useRouter } from "vue-router";
+import { fireConfetti } from "../utils/confetti";
 
 export const useProfileStore = defineStore("profile", () => {
   const authStore = useAuthStore();
@@ -17,15 +18,6 @@ export const useProfileStore = defineStore("profile", () => {
 
   const file = ref<File | null>(null);
 
-  // 🎉 Confetti function
-  const celebrate = () => {
-    confetti({
-      particleCount: 100,
-      spread: 70,
-      origin: { y: 0.6 },
-    });
-  };
-
   async function handleProfileUpdate() {
     try {
       const payload: { name?: string; email?: string } = {};
@@ -35,7 +27,7 @@ export const useProfileStore = defineStore("profile", () => {
       const res = await updateProfile(payload);
       authStore.setAuth(authStore.token!, res);
       // 🎉 Trigger celebration
-      celebrate();
+      fireConfetti();
 
       // 🎉 Wait 1.5 seconds before redirect so user sees confetti
       setTimeout(() => {
