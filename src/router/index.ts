@@ -25,8 +25,8 @@ const routes = [
   // welcome page route
   { path: "/", component: WelcomePage },
   // auth routes
-  { path: "/login", component: LoginPage },
-  { path: "/register", component: RegisterPage },
+  { path: "/login", component: LoginPage, meta: { guestOnly: true } },
+  { path: "/register", component: RegisterPage, meta: { guestOnly: true } },
   { path: "/forgot-password", component: ForgotPasswordPage },
   { path: "/reset-password/:token", component: ResetPasswordPage },
   { path: "/change-password", component: ChangePasswordPage },
@@ -78,6 +78,20 @@ router.beforeEach(async (to, from, next) => {
   // hydrate if user is not loaded yet
   if (authStore.loadingUser) {
     await authStore.hydrateUser();
+  }
+
+  const isAuth = authStore.isAuthenticated;
+
+  // if (isAuth) {
+  //   if (to.path !== "/me") {
+  //     return next("/me");
+  //   }
+  //   return next("/me"); // already at /me, no redirect
+  // }
+
+  // if alrady authenticated then restricts user to open login or register through URL
+  if (isAuth && (to.path === "/login" || to.path === "/register")) {
+    return next("/me");
   }
 
   // if route rquires login
