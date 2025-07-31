@@ -22,6 +22,7 @@ export const useValidationStore = defineStore("validation", () => {
   const oldPasswordError = ref("");
 
   const isChangePasswordFormValid = ref(false);
+  const isForgotPasswordFormValid = ref(false);
 
   const authFormStore = useAuthFormStore();
   const { handleLogin, handleRegister } = authFormStore;
@@ -185,6 +186,35 @@ export const useValidationStore = defineStore("validation", () => {
     checkChangePasswordFormValidity();
   });
 
+  function checkForgotPasswordFormValidity() {
+    isForgotPasswordFormValid.value =
+      !emailError.value && email.value.trim() !== "";
+  }
+
+  function validateForgotPasswordEmail() {
+    if (!email.value) {
+      emailError.value = "Email is required";
+    } else if (!/^\S+@\S+\.\S+$/.test(email.value)) {
+      emailError.value = "Invalid email format";
+    } else {
+      emailError.value = "";
+    }
+
+    checkForgotPasswordFormValidity();
+  }
+
+  function handleForgotPasswordSubmit(
+    submitFn: (data: { email: string }) => void
+  ) {
+    validateForgotPasswordEmail();
+
+    if (isForgotPasswordFormValid.value) {
+      submitFn({
+        email: email.value,
+      });
+    }
+  }
+
   return {
     email,
     name,
@@ -206,13 +236,16 @@ export const useValidationStore = defineStore("validation", () => {
     validateName,
     validateOldPassword,
     validateNewPassword,
+    validateForgotPasswordEmail,
 
     isLoginFormValid,
     isRegisterFormValid,
     isChangePasswordFormValid,
+    isForgotPasswordFormValid,
 
     handleLoginSubmit,
     handleRegisterSubmit,
     handleChangePasswordSubmit,
+    handleForgotPasswordSubmit,
   };
 });

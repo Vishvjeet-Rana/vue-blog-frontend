@@ -25,8 +25,8 @@ const routes = [
   // welcome page route
   { path: "/", component: WelcomePage },
   // auth routes
-  { path: "/login", component: LoginPage, meta: { guestOnly: true } },
-  { path: "/register", component: RegisterPage, meta: { guestOnly: true } },
+  { path: "/login", component: LoginPage },
+  { path: "/register", component: RegisterPage },
   { path: "/forgot-password", component: ForgotPasswordPage },
   { path: "/reset-password/:token", component: ResetPasswordPage },
   { path: "/change-password", component: ChangePasswordPage },
@@ -81,13 +81,6 @@ router.beforeEach(async (to, from, next) => {
   }
 
   const isAuth = authStore.isAuthenticated;
-
-  // if (isAuth) {
-  //   if (to.path !== "/me") {
-  //     return next("/me");
-  //   }
-  //   return next("/me"); // already at /me, no redirect
-  // }
 
   // if alrady authenticated then restricts user to open login or register through URL
   if (isAuth && (to.path === "/login" || to.path === "/register")) {

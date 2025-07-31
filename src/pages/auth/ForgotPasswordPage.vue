@@ -1,11 +1,19 @@
 <script setup lang="ts">
 import { useAuthFormStore } from "../../store/authForm";
 import { storeToRefs } from "pinia";
+import { useValidationStore } from "../../store/validations";
 
 const authFormStore = useAuthFormStore();
 
-const { error, message, email } = storeToRefs(authFormStore);
+const { error, message } = storeToRefs(authFormStore);
 const { handleForgot } = authFormStore;
+
+const validationStore = useValidationStore();
+
+const { email, isForgotPasswordFormValid } = storeToRefs(validationStore);
+
+const { handleForgotPasswordSubmit, validateForgotPasswordEmail } =
+  validationStore;
 
 const emit = defineEmits(["back"]);
 </script>
@@ -22,7 +30,10 @@ const emit = defineEmits(["back"]);
     <div
       class="flex flex-col bg-white drop-shadow-gray-600 shadow-2xl rounded-2xl h-[50%] w-[40%]"
     >
-      <form @submit.prevent="handleForgot" class="p-3">
+      <form
+        @submit.prevent="handleForgotPasswordSubmit(handleForgot)"
+        class="p-3"
+      >
         <div class="p-4">
           <label class="font-semibold text-lg" for="email"
             >Enter Your Email:</label
@@ -34,13 +45,15 @@ const emit = defineEmits(["back"]);
             v-model="email"
             type="email"
             placeholder="enter your registered email"
+            @blur="validateForgotPasswordEmail"
             required
           />
         </div>
         <div class="py-4">
           <button
-            class="border-2 border-none py-2 px-4 rounded-xl font-black bg-amber-400"
+            class="border-2 border-none py-2 px-4 rounded-xl font-black bg-amber-400 disabled:opacity-50"
             style="margin-left: 15px"
+            :disabled="!isForgotPasswordFormValid"
           >
             Send Reset Link
           </button>

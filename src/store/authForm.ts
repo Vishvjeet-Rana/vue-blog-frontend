@@ -11,6 +11,7 @@ import {
 } from "../services/auth";
 import { useAuthStore } from "./auth";
 import { fireConfetti } from "../utils/confetti";
+import { useValidationStore } from "./validations";
 
 export const useAuthFormStore = defineStore("authForm", () => {
   const router = useRouter();
@@ -29,6 +30,8 @@ export const useAuthFormStore = defineStore("authForm", () => {
   const image = ref<File | null>(null);
 
   const authStore = useAuthStore();
+
+  const validationStore = useValidationStore();
 
   const token = route.params.token as string;
 
@@ -98,15 +101,28 @@ export const useAuthFormStore = defineStore("authForm", () => {
   };
 
   const handleForgot = async () => {
+    validationStore.validateForgotPasswordEmail();
+
+    if (!validationStore.isForgotPasswordFormValid) return;
+
     try {
-      const res = await forgotPassword(email.value);
+      const res = await forgotPassword(validationStore.email);
       message.value = res.message;
       error.value = "";
-    } catch (error: any) {
-      error.value =
-        error.response?.data?.message ||
-        "Something went wrong in forgot password";
-      message.value = "";
+    } catch (err: any) {
+      const res = err?.response?.data;
+
+      const extractedMessage = Array.isArray(res?.message?.message)
+        ? res.message.message
+        : typeof res?.message?.message === "string"
+        ? res.message.message
+        : Array.isArray(res?.message)
+        ? res.message
+        : typeof res?.message === "string"
+        ? res.message
+        : "Something went wrong";
+
+      error.value = extractedMessage;
     }
   };
 
