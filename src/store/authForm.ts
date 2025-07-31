@@ -20,7 +20,7 @@ export const useAuthFormStore = defineStore("authForm", () => {
   const newPassword = ref("");
 
   const message = ref("");
-  const error = ref("");
+  const error = ref<string | string[] | null>(null);
 
   const name = ref("");
   const email = ref("");
@@ -32,41 +32,68 @@ export const useAuthFormStore = defineStore("authForm", () => {
 
   const token = route.params.token as string;
 
-  const handleChangePass = async () => {
+  // handling change password
+  const handleChangePass = async ({
+    oldPassword,
+    newPassword,
+  }: {
+    oldPassword: string;
+    newPassword: string;
+  }) => {
     try {
-      const response = await changePassword(
-        oldPassword.value,
-        newPassword.value
-      );
+      const response = await changePassword(oldPassword, newPassword);
       message.value = response.message;
-
       router.push("/login");
-    } catch (error: any) {
-      error.value =
-        error.response?.data?.message ||
-        "Something went wrong in change password";
+    } catch (err: any) {
+      const res = err?.response?.data;
+
+      const extractedMessage = Array.isArray(res?.message?.message)
+        ? res.message.message
+        : typeof res?.message?.message === "string"
+        ? res.message.message
+        : Array.isArray(res?.message)
+        ? res.message
+        : typeof res?.message === "string"
+        ? res.message
+        : "Something went wrong";
+
+      error.value = extractedMessage;
     }
   };
 
-  const handleLogin = async () => {
+  // login handling function
+  const handleLogin = async ({
+    email,
+    password,
+  }: {
+    email: string;
+    password: string;
+  }) => {
     try {
-      const { access_token } = await login({
-        email: email.value,
-        password: password.value,
-      });
+      const { access_token } = await login({ email, password });
 
       const user = await fetchCurrentUser(access_token);
       authStore.setAuth(access_token, user);
 
-      // 🎉 Trigger celebration
       fireConfetti();
 
-      // 🎉 Wait 1.5 seconds before redirect so user sees confetti
       setTimeout(() => {
         router.replace("/me");
       }, 1500);
     } catch (err: any) {
-      error.value = err.response?.data?.message || "Login failed";
+      const res = err?.response?.data;
+
+      const extractedMessage = Array.isArray(res?.message?.message)
+        ? res.message.message
+        : typeof res?.message?.message === "string"
+        ? res.message.message
+        : Array.isArray(res?.message)
+        ? res.message
+        : typeof res?.message === "string"
+        ? res.message
+        : "Something went wrong";
+
+      error.value = extractedMessage;
     }
   };
 
@@ -96,16 +123,9 @@ export const useAuthFormStore = defineStore("authForm", () => {
     }
   };
 
-  const handleRegister = async () => {
+  const handleRegister = async (form: FormData) => {
     try {
-      const form = new FormData();
-      form.append("name", name.value);
-      form.append("email", email.value);
-      form.append("password", password.value);
-      if (image.value) {
-        form.append("image", image.value);
-      }
-
+      // Optional: check payload
       // for (let [key, val] of form.entries()) {
       //   console.log(`${key}:`, val);
       // }
@@ -116,15 +136,18 @@ export const useAuthFormStore = defineStore("authForm", () => {
       const user = await fetchCurrentUser(access_token);
       authStore.setAuth(access_token, user);
 
-      // 🎉 Trigger celebration
       fireConfetti();
 
-      // 🎉 Wait 1.5 seconds before redirect so user sees confetti
       setTimeout(() => {
         router.replace("/me");
       }, 1500);
-    } catch (error: any) {
-      error.value = error.response?.data?.message || "Registration failed";
+    } catch (err: any) {
+      error.value = Array.isArray(err.response?.data?.message)
+        ? err.response.data.message
+        : err.response?.data?.message?.message ||
+          err.response?.data?.message ||
+          err.message ||
+          "Registration failed";
     }
   };
 

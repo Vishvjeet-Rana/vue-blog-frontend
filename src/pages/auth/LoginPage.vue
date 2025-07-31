@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { useAuthFormStore } from "../../store/authForm";
+import { useValidationStore } from "../../store/validations";
 
 const authFormStore = useAuthFormStore();
 
-const { error, email, password } = storeToRefs(authFormStore);
-const { handleLogin } = authFormStore;
+const validationStore = useValidationStore();
+const { emailError, passwordError, email, password, isLoginFormValid } =
+  storeToRefs(validationStore);
+const { validateEmail, validatePassword, handleLoginSubmit } = validationStore;
 </script>
 
 <template>
@@ -19,9 +22,9 @@ const { handleLogin } = authFormStore;
     <!-- will add forms here -->
 
     <div
-      class="flex flex-col bg-white drop-shadow-gray-600 shadow-2xl rounded-2xl h-[50%] w-[40%]"
+      class="flex flex-col bg-white drop-shadow-gray-600 shadow-2xl rounded-2xl h-[60%] w-[40%]"
     >
-      <form @submit.prevent="handleLogin" class="p-3">
+      <form @submit.prevent="handleLoginSubmit" class="p-3">
         <div class="p-4">
           <label for="email" class="font-semibold text-lg"
             >Enter Your Email:</label
@@ -33,7 +36,11 @@ const { handleLogin } = authFormStore;
             type="email"
             required
             class="border-b rounded-sm"
+            @input="validateEmail"
           />
+          <p v-if="emailError" class="text-red-600 text-sm mt-1">
+            {{ emailError }}
+          </p>
         </div>
         <div class="p-4">
           <label for="password" class="font-semibold text-lg"
@@ -45,12 +52,17 @@ const { handleLogin } = authFormStore;
             type="password"
             required
             class="border-b rounded-sm"
+            @input="validatePassword"
           />
+          <p v-if="passwordError" class="text-red-600 text-sm mt-1">
+            {{ passwordError }}
+          </p>
         </div>
         <div class="p-4">
           <button
-            class="border-2 border-none py-2 px-4 rounded-xl font-black bg-amber-400"
+            class="border-2 border-none py-2 px-4 rounded-xl font-black bg-amber-400 disabled:opacity-50"
             type="submit"
+            :disabled="!isLoginFormValid"
           >
             Log In &rarr;
           </button>
@@ -64,7 +76,12 @@ const { handleLogin } = authFormStore;
       </div>
     </div>
 
-    <p v-if="error" style="color: red">{{ error }}</p>
+    <div v-if="authFormStore.error" class="text-red-600 mt-4">
+      <ul v-if="Array.isArray(authFormStore.error)">
+        <li v-for="(msg, i) in authFormStore.error" :key="i">{{ msg }}</li>
+      </ul>
+      <p v-else>{{ authFormStore.error }}</p>
+    </div>
   </div>
 </template>
 

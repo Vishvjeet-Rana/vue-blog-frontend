@@ -1,11 +1,32 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { useAuthFormStore } from "../../store/authForm";
+import { useValidationStore } from "../../store/validations";
 
 const authFormStore = useAuthFormStore();
+const { handleImageUpload } = authFormStore;
 
-const { email, name, password, error } = storeToRefs(authFormStore);
-const { handleImageUpload, handleRegister } = authFormStore;
+const validationStore = useValidationStore();
+
+const {
+  emailError,
+  passwordError,
+  name,
+
+  nameError,
+  imageError,
+  email,
+  password,
+  isRegisterFormValid,
+} = storeToRefs(validationStore);
+
+const {
+  validateEmail,
+  validatePassword,
+  validateImageFile,
+  validateName,
+  handleRegisterSubmit,
+} = validationStore;
 </script>
 
 <template>
@@ -21,7 +42,7 @@ const { handleImageUpload, handleRegister } = authFormStore;
       class="flex flex-col bg-white drop-shadow-gray-600 shadow-2xl rounded-2xl h-[60%] w-[40%]"
     >
       <form
-        @submit.prevent="handleRegister"
+        @submit.prevent="handleRegisterSubmit"
         enctype="multipart/form-data"
         class="p-3"
       >
@@ -34,8 +55,12 @@ const { handleImageUpload, handleRegister } = authFormStore;
             v-model="name"
             placeholder="Enter Name"
             type="text"
+            @input="validateName"
             required
           />
+          <p v-if="nameError" class="text-red-600 text-sm mt-1">
+            {{ nameError }}
+          </p>
         </div>
         <br />
         <div class="p-4">
@@ -47,8 +72,12 @@ const { handleImageUpload, handleRegister } = authFormStore;
             v-model="email"
             placeholder="Enter Email"
             type="email"
+            @input="validateEmail"
             required
           />
+          <p v-if="emailError" class="text-red-600 text-sm mt-1">
+            {{ emailError }}
+          </p>
         </div>
         <br />
         <div class="p-4">
@@ -62,8 +91,12 @@ const { handleImageUpload, handleRegister } = authFormStore;
             v-model="password"
             placeholder="Enter Password"
             type="password"
+            @input="validatePassword"
             required
           />
+          <p v-if="passwordError" class="text-red-600 text-sm mt-1">
+            {{ passwordError }}
+          </p>
         </div>
         <br />
         <div class="p-4">
@@ -72,14 +105,24 @@ const { handleImageUpload, handleRegister } = authFormStore;
           <input
             class="border-b rounded-sm"
             id="image"
-            @change="handleImageUpload"
+            @change="
+              (e) => {
+                handleImageUpload(e);
+                const file = (e.target as HTMLInputElement)?.files?.[0];
+                if(file){validateImageFile(file);}
+              }
+            "
             type="file"
-            accept="image/*"
+            accept=".jpg, .jpeg, .png"
           />
+          <p v-if="imageError" class="text-red-600 text-sm mt-1">
+            {{ imageError }}
+          </p>
         </div>
         <div class="p-4">
           <button
-            class="border-2 border-none py-2 px-4 rounded-xl font-black bg-amber-400"
+            class="border-2 border-none py-2 px-4 rounded-xl font-black bg-amber-400 disabled:opacity-50"
+            :disabled="!isRegisterFormValid"
             type="submit"
           >
             Register &rarr;
@@ -88,7 +131,12 @@ const { handleImageUpload, handleRegister } = authFormStore;
       </form>
     </div>
 
-    <p v-if="error" style="color: red">{{ error }}</p>
+    <div v-if="authFormStore.error" class="text-red-600 mt-4">
+      <ul v-if="Array.isArray(authFormStore.error)">
+        <li v-for="(msg, i) in authFormStore.error" :key="i">{{ msg }}</li>
+      </ul>
+      <p v-else>{{ authFormStore.error }}</p>
+    </div>
   </div>
 </template>
 
