@@ -23,9 +23,10 @@ export const useValidationStore = defineStore("validation", () => {
 
   const isChangePasswordFormValid = ref(false);
   const isForgotPasswordFormValid = ref(false);
+  const isResetPasswordFormValid = ref(false);
 
   const authFormStore = useAuthFormStore();
-  const { handleLogin, handleRegister } = authFormStore;
+  const { handleRegister } = authFormStore;
 
   // email validation logic
   function validateEmail() {
@@ -96,7 +97,7 @@ export const useValidationStore = defineStore("validation", () => {
 
     if (isLoginFormValid.value) {
       // handle login logic
-      handleLogin({
+      authFormStore.handleLogin({
         email: email.value,
         password: password.value,
       });
@@ -215,6 +216,44 @@ export const useValidationStore = defineStore("validation", () => {
     }
   }
 
+  watch([email, emailError], () => {
+    checkForgotPasswordFormValidity();
+  });
+
+  function checkResetPasswordFormValidity() {
+    isResetPasswordFormValid.value =
+      !newPasswordError.value && newPassword.value.trim() !== "";
+  }
+
+  function validateResetPassword() {
+    if (!newPassword.value) {
+      newPasswordError.value = "New password is required";
+    } else if (newPassword.value.length < 8) {
+      newPasswordError.value =
+        "New password must be at least 8 characters long";
+    } else {
+      newPasswordError.value = "";
+    }
+
+    checkResetPasswordFormValidity();
+  }
+
+  function handleResetPasswordSubmit(
+    submitFn: (data: { password: string }) => void
+  ) {
+    validateResetPassword();
+
+    if (isResetPasswordFormValid.value) {
+      submitFn({
+        password: newPassword.value,
+      });
+    }
+  }
+
+  watch([newPassword, newPasswordError], () => {
+    checkResetPasswordFormValidity();
+  });
+
   return {
     email,
     name,
@@ -237,15 +276,18 @@ export const useValidationStore = defineStore("validation", () => {
     validateOldPassword,
     validateNewPassword,
     validateForgotPasswordEmail,
+    validateResetPassword,
 
     isLoginFormValid,
     isRegisterFormValid,
     isChangePasswordFormValid,
     isForgotPasswordFormValid,
+    isResetPasswordFormValid,
 
     handleLoginSubmit,
     handleRegisterSubmit,
     handleChangePasswordSubmit,
     handleForgotPasswordSubmit,
+    handleResetPasswordSubmit,
   };
 });

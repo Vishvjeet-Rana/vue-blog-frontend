@@ -126,16 +126,25 @@ export const useAuthFormStore = defineStore("authForm", () => {
     }
   };
 
-  const handleReset = async () => {
+  const handleReset = async ({ password }: { password: string }) => {
     try {
-      const response = await resetPassword(token, newPassword.value);
+      const response = await resetPassword(token, password);
       message.value = response.message;
       router.push("/login");
-    } catch (error: any) {
-      error.value =
-        error.response?.data?.message ||
-        "Something went wrong in Reset Password";
-      message.value = "";
+    } catch (err: any) {
+      const res = err?.response?.data;
+
+      const extractedMessage = Array.isArray(res?.message?.message)
+        ? res.message.message
+        : typeof res?.message?.message === "string"
+        ? res.message.message
+        : Array.isArray(res?.message)
+        ? res.message
+        : typeof res?.message === "string"
+        ? res.message
+        : "Something went wrong";
+
+      error.value = extractedMessage;
     }
   };
 

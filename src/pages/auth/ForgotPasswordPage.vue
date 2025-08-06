@@ -5,7 +5,7 @@ import { useValidationStore } from "../../store/validations";
 
 const authFormStore = useAuthFormStore();
 
-const { error, message } = storeToRefs(authFormStore);
+const { message } = storeToRefs(authFormStore);
 const { handleForgot } = authFormStore;
 
 const validationStore = useValidationStore();
@@ -45,9 +45,12 @@ const emit = defineEmits(["back"]);
             v-model="email"
             type="email"
             placeholder="enter your registered email"
-            @blur="validateForgotPasswordEmail"
+            @input="validateForgotPasswordEmail"
             required
           />
+          <p class="text-red-600 text-sm" v-if="validationStore.emailError">
+            {{ validationStore.emailError }}
+          </p>
         </div>
         <div class="py-4">
           <button
@@ -69,7 +72,12 @@ const emit = defineEmits(["back"]);
       &larr; Go Back
     </button>
     <p style="color: green">{{ message }}</p>
-    <p style="color: red">{{ error }}</p>
+    <div v-if="authFormStore.error" class="text-red-600 mt-4">
+      <ul v-if="Array.isArray(authFormStore.error)">
+        <li v-for="(msg, i) in authFormStore.error" :key="i">{{ msg }}</li>
+      </ul>
+      <p v-else>{{ authFormStore.error }}</p>
+    </div>
   </div>
 </template>
 

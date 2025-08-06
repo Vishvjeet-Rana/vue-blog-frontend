@@ -1,11 +1,18 @@
 <script setup lang="ts">
 import { useAuthFormStore } from "../../store/authForm";
 import { storeToRefs } from "pinia";
+import { useValidationStore } from "../../store/validations";
 
 const authFormStore = useAuthFormStore();
 
-const { newPassword, error, message } = storeToRefs(authFormStore);
+const { message } = storeToRefs(authFormStore);
 const { handleReset } = authFormStore;
+
+const validateStore = useValidationStore();
+
+const { newPassword, newPasswordError, isResetPasswordFormValid } =
+  storeToRefs(validateStore);
+const { handleResetPasswordSubmit, validateResetPassword } = validateStore;
 
 const emit = defineEmits(["back"]);
 </script>
@@ -22,7 +29,10 @@ const emit = defineEmits(["back"]);
     <div
       class="flex flex-col bg-white drop-shadow-gray-600 shadow-2xl rounded-2xl h-[50%] w-[40%]"
     >
-      <form @submit.prevent="handleReset" class="p-3">
+      <form
+        @submit.prevent="handleResetPasswordSubmit(handleReset)"
+        class="p-3"
+      >
         <div class="p-4">
           <label class="font-semibold text-lg" for="password"
             >Enter Password:</label
@@ -34,12 +44,17 @@ const emit = defineEmits(["back"]);
             placeholder="Enter New Password"
             required
             v-model="newPassword"
+            @input="validateResetPassword"
           />
+          <p v-if="newPasswordError" class="text-red-600 text-sm mt-1">
+            {{ newPasswordError }}
+          </p>
         </div>
         <div class="p-4">
           <button
-            class="border-2 border-none py-2 px-4 rounded-xl font-black bg-amber-400"
+            class="border-2 border-none py-2 px-4 rounded-xl font-black bg-amber-400 disabled:opacity-50"
             type="submit"
+            :disabled="!isResetPasswordFormValid"
           >
             Reset Password
           </button>
@@ -57,7 +72,12 @@ const emit = defineEmits(["back"]);
       </button>
     </div>
     <p style="color: green">{{ message }}</p>
-    <p style="color: red">{{ error }}</p>
+    <div v-if="authFormStore.error" class="text-red-600 mt-4">
+      <ul v-if="Array.isArray(authFormStore.error)">
+        <li v-for="(msg, i) in authFormStore.error" :key="i">{{ msg }}</li>
+      </ul>
+      <p v-else>{{ authFormStore.error }}</p>
+    </div>
   </div>
 </template>
 
